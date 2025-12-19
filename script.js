@@ -273,8 +273,11 @@ function checkWin(reels, bet) {
         updateFreeSpinsCounter();
         
         if (freeSpinsRemaining > 0) {
-            // Auto-spin next free spin
-            setTimeout(() => play(), 2000);
+            // Auto-spin next free spin - keep button disabled
+            setTimeout(() => {
+                spinBtn.disabled = false;  // Briefly enable to allow play() to work
+                play();
+            }, 2000);
             return;
         } else {
             // End of free spins
