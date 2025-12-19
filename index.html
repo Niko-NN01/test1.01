@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎰 Casino Slot Machine</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎰 Casino Slot Machine</h1>
+        
+        <div class="balance">
+            <p>Saldo: <span id="balance">100</span></p>
+        </div>
+        
+        <div class="reels">
+            <div class="reel" id="reel1">❔</div>
+            <div class="reel" id="reel2">❔</div>
+            <div class="reel" id="reel3">❔</div>
+        </div>
+        
+        <div class="controls">
+            <input type="number" id="bet" value="10" min="1" placeholder="Panos">
+            <button id="spinBtn" onclick="play()">SPIN 🎰</button>
+        </div>
+        
+        <div class="result" id="result"></div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
