@@ -24,6 +24,115 @@ let freeSpinsRemaining = 0;
 let isSuperBonus = false;
 let currentBet = 1;
 
+// Audio Context for sound effects
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+let spinningOscillator = null;
+let spinningGain = null;
+
+// Play sound effect
+function playSound(type) {
+    try {
+        // Try to play HTML audio element first
+        const audio = document.getElementById(type + 'Sound');
+        if (audio && audio.src) {
+            audio.currentTime = 0;
+            audio.play().catch(() => {});
+        } else {
+            // Fallback to Web Audio API beeps
+            playBeep(type);
+        }
+    } catch (e) {
+        console.log('Audio not supported');
+    }
+}
+
+// Generate beep sounds using Web Audio API
+function playBeep(type) {
+    switch(type) {
+        case 'win':
+            const winOsc = audioContext.createOscillator();
+            const winGain = audioContext.createGain();
+            winOsc.connect(winGain);
+            winGain.connect(audioContext.destination);
+            winOsc.frequency.value = 800;
+            winGain.gain.setValueAtTime(0.3, audioContext.currentTime);
+            winGain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            winOsc.start(audioContext.currentTime);
+            winOsc.stop(audioContext.currentTime + 0.3);
+            break;
+        case 'bigWin':
+            // Play ascending tones
+            [600, 800, 1000].forEach((freq, i) => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.2, audioContext.currentTime + i * 0.15);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + i * 0.15 + 0.2);
+                osc.start(audioContext.currentTime + i * 0.15);
+                osc.stop(audioContext.currentTime + i * 0.15 + 0.2);
+            });
+            break;
+        case 'scatter':
+            // Play multiple quick beeps
+            [1000, 1200, 1400, 1600].forEach((freq, i) => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.2, audioContext.currentTime + i * 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + i * 0.1 + 0.1);
+                osc.start(audioContext.currentTime + i * 0.1);
+                osc.stop(audioContext.currentTime + i * 0.1 + 0.1);
+            });
+            break;
+        case 'spin':
+            // Continuous spinning sound
+            stopSpinSound(); // Stop any existing spin sound
+            
+            spinningOscillator = audioContext.createOscillator();
+            spinningGain = audioContext.createGain();
+            
+            spinningOscillator.connect(spinningGain);
+            spinningGain.connect(audioContext.destination);
+            
+            spinningOscillator.type = 'sawtooth';
+            spinningOscillator.frequency.value = 80;
+            
+            // Create a pulsing effect
+            const lfo = audioContext.createOscillator();
+            const lfoGain = audioContext.createGain();
+            lfo.frequency.value = 8; // 8 Hz pulsing
+            lfoGain.gain.value = 20;
+            lfo.connect(lfoGain);
+            lfoGain.connect(spinningOscillator.frequency);
+            
+            spinningGain.gain.setValueAtTime(0, audioContext.currentTime);
+            spinningGain.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + 0.1);
+            
+            lfo.start(audioContext.currentTime);
+            spinningOscillator.start(audioContext.currentTime);
+            
+            // Store LFO for cleanup
+            spinningOscillator.lfo = lfo;
+            break;
+    }
+}
+
+function stopSpinSound() {
+    if (spinningOscillator && spinningGain) {
+        spinningGain.gain.linearRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+        spinningOscillator.stop(audioContext.currentTime + 0.15);
+        if (spinningOscillator.lfo) {
+            spinningOscillator.lfo.stop(audioContext.currentTime + 0.15);
+        }
+        spinningOscillator = null;
+        spinningGain = null;
+    }
+}
+
 // Define 10 paylines (row indices for each of 5 reels)
 const paylines = [
     [1, 1, 1, 1, 1], // Line 1: Middle row
@@ -127,6 +236,9 @@ function playWithBet(bet) {
         reel.classList.remove('spin', 'stop', 'winning', 'potential-win');
     });
 
+    // Play spin sound
+    playSound('spin');
+    
     // Start spinning all reels
     allReels.forEach((reel) => {
         reel.classList.add('spin');
@@ -159,6 +271,7 @@ function playWithBet(bet) {
             
             // Check win after last column stops
             if (col === 4) {
+                stopSpinSound(); // Stop spinning sound
                 setTimeout(() => checkWin(reels, bet), 300);
             }
         }, 500 + (col * spinSpeed));
@@ -246,6 +359,14 @@ function checkWin(reels, bet) {
         const wildBonus = winningLines.some(w => w.symbol.isWild) ? " 🌟" : "";
         
         let winType = 'normal';
+        
+        // Play appropriate win sound
+        if (totalWin >= bet * 20) {
+            playSound('bigWin');
+        } else {
+            playSound('win');
+        }
+        
         if (bestWin.count === 5 && bestWin.symbol.isWild) {
             resultLabel.textContent = `🌟 WILD OLYMPUS! Line ${bestWin.line} = +€${totalWin.toFixed(2)} (${winningLines.length} lines!)`;
             resultLabel.style.color = "#ff00ff";
@@ -322,6 +443,9 @@ function checkWin(reels, bet) {
         
         // Re-enable button before showing animation
         spinBtn.disabled = false;
+        
+        // Play scatter sound
+        playSound('scatter');
         
         // Show free spins won animation, then offer gamble
         showFreeSpinsAnimation(scatterCount, newFreeSpins, isSuperBonusMode);
