@@ -17,31 +17,74 @@
         </div>
         
         <div class="reels-container">
-            <div class="reels">
-                <div class="reel" id="reel1">❔</div>
-                <div class="reel" id="reel2">❔</div>
-                <div class="reel" id="reel3">❔</div>
-                <div class="reel" id="reel4">❔</div>
-                <div class="reel" id="reel5">❔</div>
+            <div class="paylines-info">🎰 Playing 10 Paylines 🎰</div>
+            <div class="reels-grid">
+                <div class="reel-column">
+                    <div class="reel" data-reel="0" data-row="0">❔</div>
+                    <div class="reel" data-reel="0" data-row="1">❔</div>
+                    <div class="reel" data-reel="0" data-row="2">❔</div>
+                </div>
+                <div class="reel-column">
+                    <div class="reel" data-reel="1" data-row="0">❔</div>
+                    <div class="reel" data-reel="1" data-row="1">❔</div>
+                    <div class="reel" data-reel="1" data-row="2">❔</div>
+                </div>
+                <div class="reel-column">
+                    <div class="reel" data-reel="2" data-row="0">❔</div>
+                    <div class="reel" data-reel="2" data-row="1">❔</div>
+                    <div class="reel" data-reel="2" data-row="2">❔</div>
+                </div>
+                <div class="reel-column">
+                    <div class="reel" data-reel="3" data-row="0">❔</div>
+                    <div class="reel" data-reel="3" data-row="1">❔</div>
+                    <div class="reel" data-reel="3" data-row="2">❔</div>
+                </div>
+                <div class="reel-column">
+                    <div class="reel" data-reel="4" data-row="0">❔</div>
+                    <div class="reel" data-reel="4" data-row="1">❔</div>
+                    <div class="reel" data-reel="4" data-row="2">❔</div>
+                </div>
             </div>
         </div>
         
         <div class="paytable">
             <h3>💎 PAYTABLE 💎</h3>
             <div class="paytable-grid">
-                <div class="pay-item"><span class="symbol">⚡</span> x5 = 100x</div>
-                <div class="pay-item"><span class="symbol">🔱</span> x5 = 50x</div>
-                <div class="pay-item"><span class="symbol">👑</span> x5 = 25x</div>
-                <div class="pay-item"><span class="symbol">🦉</span> x5 = 15x</div>
-                <div class="pay-item"><span class="symbol">⚔️</span> x5 = 10x</div>
-                <div class="pay-item"><span class="symbol">🏛️</span> x5 = 8x</div>
-                <div class="pay-item"><span class="symbol">🏺</span> x5 = 5x</div>
-                <div class="pay-item"><span class="symbol">🍇</span> x5 = 3x</div>
+                <div class="pay-item wild-item"><span class="symbol">🌟</span> WILD x5 = 200x</div>
+                <div class="pay-item"><span class="symbol">⚡</span> Zeus x5 = 100x</div>
+                <div class="pay-item"><span class="symbol">💀</span> Hades x5 = 75x</div>
+                <div class="pay-item"><span class="symbol">🔱</span> Poseidon x5 = 50x</div>
+                <div class="pay-item"><span class="symbol">🦉</span> Athena x5 = 25x</div>
+                <div class="pay-item"><span class="symbol">⚔️</span> Ares x5 = 15x</div>
+                <div class="pay-item"><span class="symbol">👑</span> Crown x5 = 10x</div>
+                <div class="pay-item"><span class="symbol">🏛️</span> Temple x5 = 8x</div>
+                <div class="pay-item"><span class="symbol">🏺</span> Vase x5 = 5x</div>
+                <div class="pay-item"><span class="symbol">🍇</span> Grapes x5 = 3x</div>
             </div>
+            <p class="wild-info">🌟 Wild substitutes for any symbol!</p>
+            <p class="payline-info">💰 Wins on any of 10 paylines: 3+ matching = WIN!</p>
         </div>
         
         <div class="controls">
-            <input type="number" id="bet" value="10" min="1" placeholder="Bet">
+            <div class="bet-controls">
+                <label>Bet Amount:</label>
+                <div class="bet-buttons">
+                    <button class="bet-btn" onclick="adjustBet(-10)">-10</button>
+                    <button class="bet-btn" onclick="adjustBet(-5)">-5</button>
+                    <button class="bet-btn" onclick="adjustBet(-1)">-1</button>
+                    <input type="number" id="bet" value="10" min="1" placeholder="Bet">
+                    <button class="bet-btn" onclick="adjustBet(1)">+1</button>
+                    <button class="bet-btn" onclick="adjustBet(5)">+5</button>
+                    <button class="bet-btn" onclick="adjustBet(10)">+10</button>
+                </div>
+                <div class="bet-presets">
+                    <button class="preset-btn" onclick="setBet(1)">MIN</button>
+                    <button class="preset-btn" onclick="setBet(10)">10</button>
+                    <button class="preset-btn" onclick="setBet(25)">25</button>
+                    <button class="preset-btn" onclick="setBet(50)">50</button>
+                    <button class="preset-btn" onclick="setBet(balance)">MAX</button>
+                </div>
+            </div>
             <button id="spinBtn" onclick="play()">⚡ SPIN THE FATES ⚡</button>
         </div>
         

@@ -103,22 +103,36 @@ h1 {
     border: 2px solid rgba(255, 215, 0, 0.2);
 }
 
-.reels {
+.paylines-info {
+    color: #ffd700;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+.reels-grid {
     display: flex;
     justify-content: center;
     gap: 12px;
-    margin: 0;
     flex-wrap: wrap;
+}
+
+.reel-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .reel {
     background: linear-gradient(145deg, #0f3460 0%, #16213e 100%);
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 50px;
+    font-size: 40px;
     border-radius: 15px;
     border: 3px solid #ffd700;
     box-shadow: 
@@ -160,6 +174,22 @@ h1 {
     animation: stopReel 0.2s ease-out;
 }
 
+/* Symbol images */
+.symbol-img {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+}
+
+.payline-info {
+    margin-top: 10px;
+    font-size: 0.85em;
+    color: #87ceeb;
+    text-align: center;
+    font-style: italic;
+}
+
 @keyframes spinReel {
     0% { 
         transform: translateY(0) rotateX(0deg);
@@ -197,6 +227,82 @@ h1 {
     flex-direction: column;
     gap: 15px;
     align-items: center;
+}
+
+.bet-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+}
+
+.bet-controls label {
+    color: #ffd700;
+    font-weight: bold;
+    font-size: 1.1em;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.bet-buttons {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.bet-btn {
+    background: linear-gradient(145deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+    color: #ffd700;
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9em;
+}
+
+.bet-btn:hover {
+    background: linear-gradient(145deg, rgba(255, 215, 0, 0.4), rgba(255, 215, 0, 0.2));
+    border-color: #ffd700;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
+}
+
+.bet-btn:active {
+    transform: translateY(0);
+}
+
+.bet-presets {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.preset-btn {
+    background: linear-gradient(145deg, rgba(135, 206, 235, 0.3), rgba(135, 206, 235, 0.1));
+    color: #87ceeb;
+    border: 2px solid rgba(135, 206, 235, 0.5);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.85em;
+}
+
+.preset-btn:hover {
+    background: linear-gradient(145deg, rgba(135, 206, 235, 0.5), rgba(135, 206, 235, 0.2));
+    border-color: #87ceeb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(135, 206, 235, 0.3);
+}
+
+.preset-btn:active {
+    transform: translateY(0);
 }
 
 #bet {
@@ -321,6 +427,31 @@ h1 {
     margin-right: 5px;
 }
 
+.wild-item {
+    background: linear-gradient(145deg, rgba(138, 43, 226, 0.3), rgba(75, 0, 130, 0.3));
+    border: 2px solid #ff00ff;
+    color: #ffb3ff;
+    font-weight: bold;
+    animation: wildGlow 2s ease-in-out infinite;
+}
+
+@keyframes wildGlow {
+    0%, 100% { 
+        box-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
+    }
+    50% { 
+        box-shadow: 0 0 20px rgba(255, 0, 255, 0.6);
+    }
+}
+
+.wild-info {
+    margin-top: 10px;
+    font-size: 0.85em;
+    color: #ffb3ff;
+    text-align: center;
+    font-style: italic;
+}
+
 @media (max-width: 768px) {
     .container {
         padding: 20px;
@@ -330,14 +461,18 @@ h1 {
         font-size: 1.5em;
     }
     
-    .reels {
-        gap: 8px;
+    .reels-grid {
+        gap: 6px;
+    }
+
+    .reel-column {
+        gap: 6px;
     }
     
     .reel {
-        width: 70px;
-        height: 70px;
-        font-size: 35px;
+        width: 55px;
+        height: 55px;
+        font-size: 28px;
     }
     
     .paytable-grid {
