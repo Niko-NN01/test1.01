@@ -28,6 +28,9 @@ let currentBet = 1;
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 let backgroundMusicNodes = [];
 let isMusicPlaying = false;
+let spinningOscillator = null;
+let spinningGain = null;
+let isFreeSpinsMusic = false;
 
 // Start mythological background music
 function startBackgroundMusic() {
@@ -49,12 +52,20 @@ function playGeneratedMusic() {
     if (isMusicPlaying) return;
     isMusicPlaying = true;
     
-    // Epic chord progression in minor key (Am - F - C - G)
-    const chordProgression = [
-        [220, 261.63, 329.63], // A minor
-        [174.61, 220, 261.63], // F major
-        [261.63, 329.63, 392],  // C major
-        [196, 246.94, 293.66]   // G major
+    // Relaxing chord progression for normal play (Cmaj7 - Am7 - Fmaj7 - G7)
+    const relaxedChords = [
+        [261.63, 329.63, 392, 493.88],   // Cmaj7
+        [220, 261.63, 329.63, 392],      // Am7
+        [174.61, 220, 261.63, 329.63],   // Fmaj7
+        [196, 246.94, 293.66, 369.99]    // G7
+    ];
+    
+    // Hyping progression for free spins (faster tempo, power chords)
+    const hypingChords = [
+        [220, 440, 660],      // A power chord
+        [246.94, 493.88, 740.82], // B power chord
+        [329.63, 659.26, 988.89], // E power chord
+        [293.66, 587.32, 880.99]  // D power chord
     ];
     
     let chordIndex = 0;
@@ -73,6 +84,7 @@ function playGeneratedMusic() {
         
         if (!isMusicPlaying) return;
         
+        const chordProgression = isFreeSpinsMusic ? hypingChords : relaxedChords;
         const chord = chordProgression[chordIndex];
         chordIndex = (chordIndex + 1) % chordProgression.length;
         
@@ -84,25 +96,49 @@ function playGeneratedMusic() {
             osc.connect(gain);
             gain.connect(audioContext.destination);
             
-            osc.type = 'sine';
-            osc.frequency.value = freq / 2; // Lower octave for epic feel
-            
-            gain.gain.setValueAtTime(0, audioContext.currentTime);
-            gain.gain.linearRampToValueAtTime(0.03, audioContext.currentTime + 0.3);
-            gain.gain.setValueAtTime(0.03, audioContext.currentTime + 1.5);
+            if (isFreeSpinsMusic) {
+                osc.type = 'square'; // More aggressive sound for free spins
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0, audioContext.currentTime);
+                gain.gain.linearRampToValueAtTime(0.04, audioContext.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.04, audioContext.currentTime + 0.8);
+            } else {
+                osc.type = 'sine'; // Smooth, relaxing sound
+                osc.frequency.value = freq / 2; // Lower octave for calm feel
+                gain.gain.setValueAtTime(0, audioContext.currentTime);
+                gain.gain.linearRampToValueAtTime(0.025, audioContext.currentTime + 0.5);
+                gain.gain.setValueAtTime(0.025, audioContext.currentTime + 2.5);
+            }
             
             osc.start(audioContext.currentTime);
             
             backgroundMusicNodes.push({ osc, gain });
         });
         
-        // Schedule next chord
+        // Schedule next chord - faster during free spins
         if (isMusicPlaying) {
-            setTimeout(playChord, 2000); // Change chord every 2 seconds
+            const interval = isFreeSpinsMusic ? 1000 : 3000; // Faster for free spins
+            setTimeout(playChord, interval);
         }
     }
     
     playChord();
+}
+
+function switchToFreeSpinsMusic() {
+    isFreeSpinsMusic = true;
+    // Restart music with new progression
+    stopBackgroundMusic();
+    isMusicPlaying = false;
+    startBackgroundMusic();
+}
+
+function switchToNormalMusic() {
+    isFreeSpinsMusic = false;
+    // Restart music with normal progression
+    stopBackgroundMusic();
+    isMusicPlaying = false;
+    startBackgroundMusic();
 }
 
 function stopBackgroundMusic() {
@@ -182,6 +218,34 @@ function playBeep(type) {
                 osc.stop(audioContext.currentTime + i * 0.1 + 0.1);
             });
             break;
+        case 'spin':
+            // Relaxing spinning sound
+            stopSpinSound();
+            
+            spinningOscillator = audioContext.createOscillator();
+            spinningGain = audioContext.createGain();
+            
+            spinningOscillator.connect(spinningGain);
+            spinningGain.connect(audioContext.destination);
+            
+            spinningOscillator.type = 'sine'; // Soft, relaxing tone
+            spinningOscillator.frequency.value = 440; // A4 note
+            
+            // Gentle volume swell
+            spinningGain.gain.setValueAtTime(0, audioContext.currentTime);
+            spinningGain.gain.linearRampToValueAtTime(0.02, audioContext.currentTime + 0.2);
+            
+            spinningOscillator.start(audioContext.currentTime);
+            break;
+    }
+}
+
+function stopSpinSound() {
+    if (spinningOscillator && spinningGain) {
+        spinningGain.gain.linearRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+        spinningOscillator.stop(audioContext.currentTime + 0.3);
+        spinningOscillator = null;
+        spinningGain = null;
     }
 }
 
@@ -291,6 +355,9 @@ function playWithBet(bet) {
     // Start background music on first interaction
     startBackgroundMusic();
     
+    // Play relaxing spin sound
+    playSound('spin');
+    
     // Start spinning all reels
     allReels.forEach((reel) => {
         reel.classList.add('spin');
@@ -323,6 +390,7 @@ function playWithBet(bet) {
             
             // Check win after last column stops
             if (col === 4) {
+                stopSpinSound();
                 setTimeout(() => checkWin(reels, bet), 300);
             }
         }, 500 + (col * spinSpeed));
@@ -466,6 +534,7 @@ function checkWin(reels, bet) {
             console.log('Free spins ended');
             isSuperBonus = false;
             spinBtn.disabled = false;
+            switchToNormalMusic(); // Switch back to relaxing music
             showFreeSpinsEndSummary();
         }
         return; // Don't continue to scatter check or manual button enable
@@ -760,8 +829,9 @@ function startFreeSpins(spins, isSuperBonusMode) {
     
     freeSpinsRemaining = spins;
     isSuperBonus = isSuperBonusMode;
-    
-    // Show free spins counter
+        // Switch to hyping music for free spins
+    switchToFreeSpinsMusic();
+        // Show free spins counter
     updateFreeSpinsCounter();
     
     // Start first free spin
