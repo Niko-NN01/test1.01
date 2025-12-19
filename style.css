@@ -498,6 +498,21 @@ input:checked + .toggle-slider:before {
 
 .bet-label:hover {
     background: linear-gradient(135deg, #3a3a45 0%, #2f2f38 100%);
+    border-color: rgba(212, 175, 55, 0.5);
+    transform: translateY(-2px);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+#spinBtn {
+    flex: 1;
+}
     border-color: #d4af37;
 }
 
@@ -651,6 +666,117 @@ input:checked + .toggle-slider:before {
     transform: none;
     box-shadow: none;
     opacity: 0.5;
+}
+
+.buy-bonus-container {
+    position: relative;
+}
+
+.buy-bonus-btn {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8080 100%);
+    color: #fff;
+    font-size: 0.9em;
+    font-weight: 600;
+    font-family: 'Raleway', sans-serif;
+    padding: 12px 25px;
+    border: 1px solid rgba(255, 107, 107, 0.5);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+}
+
+.buy-bonus-btn:hover {
+    background: linear-gradient(135deg, #ff7b7b 0%, #ff9090 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.5);
+    border-color: rgba(255, 107, 107, 0.7);
+}
+
+.buy-bonus-dropdown {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(165deg, #1a1a22 0%, #12121a 100%);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 320px;
+}
+
+.buy-bonus-dropdown.show {
+    display: flex;
+}
+
+.bonus-buy-option {
+    background: linear-gradient(135deg, #2a2a35 0%, #1f1f28 100%);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 8px;
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bonus-buy-option:hover {
+    background: linear-gradient(135deg, #3a3a45 0%, #2f2f38 100%);
+    border-color: rgba(212, 175, 55, 0.5);
+    transform: translateX(5px);
+}
+
+.bonus-buy-option.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.bonus-buy-option.superbonus {
+    border-color: rgba(255, 0, 255, 0.4);
+}
+
+.bonus-buy-option.superbonus:hover {
+    border-color: rgba(255, 0, 255, 0.6);
+}
+
+.bonus-buy-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.bonus-buy-title {
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    color: #d4af37;
+    font-weight: 600;
+}
+
+.bonus-buy-option.superbonus .bonus-buy-title {
+    color: #ff00ff;
+}
+
+.bonus-buy-desc {
+    font-size: 12px;
+    color: #a08850;
+}
+
+.bonus-buy-cost {
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    color: #d4af37;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
 .result {
@@ -960,4 +1086,407 @@ input:checked + .toggle-slider:before {
     .reel-column {
         gap: 5px;
     }
+}
+/* Free Spins Overlay */
+.free-spins-overlay,
+.gamble-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.free-spins-overlay.show,
+.gamble-overlay.show {
+    opacity: 1;
+}
+
+.free-spins-content,
+.gamble-content {
+    background: linear-gradient(135deg, #1a1a22 0%, #14141a 100%);
+    border: 2px solid #d4af37;
+    border-radius: 20px;
+    padding: 60px 80px;
+    text-align: center;
+    max-width: 600px;
+    box-shadow: 0 20px 60px rgba(212, 175, 55, 0.3);
+    animation: bounceIn 0.6s ease-out;
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.3) translateY(-100px);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.scatter-stars {
+    font-size: 60px;
+    margin-bottom: 20px;
+    animation: starPulse 1s ease-in-out infinite;
+}
+
+@keyframes starPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.free-spins-content h2,
+.gamble-content h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 48px;
+    color: #d4af37;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+}
+
+.free-spins-count {
+    font-size: 72px;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 0 30px rgba(212, 175, 55, 0.8);
+    margin: 30px 0;
+}
+
+.bonus-info {
+    font-size: 24px;
+    color: #ff00ff;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+}
+
+.gamble-btn,
+.collect-btn,
+.decline-btn,
+.spin-wheel-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 24px;
+    padding: 18px 50px;
+    margin: 15px 10px;
+    border: 2px solid #d4af37;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #d4af37 0%, #c9a227 100%);
+    color: #1a1a22;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+}
+
+.gamble-btn:hover,
+.collect-btn:hover,
+.decline-btn:hover,
+.spin-wheel-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.6);
+}
+
+.decline-btn {
+    background: linear-gradient(135deg, #666 0%, #444 100%);
+    border-color: #888;
+    color: #fff;
+}
+
+.current-spins {
+    font-size: 24px;
+    color: #d4af37;
+    margin-bottom: 40px;
+}
+
+/* Gamble Wheel */
+.wheel-container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    margin: 40px auto;
+}
+
+.wheel-pointer {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 60px;
+    color: #d4af37;
+    z-index: 10;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+}
+
+.wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 8px solid #d4af37;
+    position: relative;
+    background: #1a1a22;
+    box-shadow: 
+        0 0 40px rgba(212, 175, 55, 0.5),
+        inset 0 0 40px rgba(0, 0, 0, 0.5);
+    transition: transform 0s;
+}
+
+.wheel-segment {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 20px;
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+    background: linear-gradient(135deg, #d4af37 0%, #c9a227 50%);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.wheel-segment:nth-child(even) {
+    background: linear-gradient(135deg, #b8941f 0%, #a67c1a 50%);
+}
+
+.superbonus-text {
+    font-size: 18px;
+    line-height: 1.2;
+    color: #ff00ff;
+    text-shadow: 0 0 10px rgba(255, 0, 255, 0.8);
+}
+
+/* Free Spins Counter */
+.free-spins-counter {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #1a1a22 0%, #14141a 100%);
+    border: 3px solid #d4af37;
+    border-radius: 15px;
+    padding: 20px 30px;
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.5);
+    z-index: 1000;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.counter-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.counter-label {
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    color: #d4af37;
+    font-weight: 600;
+}
+
+.counter-value {
+    font-size: 48px;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 8px 30px rgba(212, 175, 55, 0.5);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 12px 40px rgba(212, 175, 55, 0.7);
+    }
+}
+
+.summary-text {
+    font-size: 24px;
+    color: #e8e8e8;
+    margin: 20px 0;
+}/* Buy Bonus Overlay */
+.buy-bonus-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.buy-bonus-overlay.show {
+    opacity: 1;
+}
+
+.buy-bonus-content {
+    background: linear-gradient(135deg, #1a1a22 0%, #14141a 100%);
+    border: 3px solid #d4af37;
+    border-radius: 20px;
+    padding: 50px 60px;
+    text-align: center;
+    max-width: 800px;
+    box-shadow: 0 20px 60px rgba(212, 175, 55, 0.4);
+    animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+    0% {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.buy-bonus-content h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 42px;
+    color: #d4af37;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+}
+
+.buy-info {
+    font-size: 20px;
+    color: #e8e8e8;
+    margin-bottom: 40px;
+}
+
+.bonus-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.bonus-option {
+    background: linear-gradient(135deg, #2a2a35 0%, #1f1f28 100%);
+    border: 2px solid #d4af37;
+    border-radius: 15px;
+    padding: 30px 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.bonus-option::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.bonus-option:hover::before {
+    opacity: 1;
+}
+
+.bonus-option:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.5);
+    border-color: #e5c158;
+}
+
+.bonus-option.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.bonus-option.superbonus {
+    border-color: #ff00ff;
+    background: linear-gradient(135deg, #3a2a45 0%, #2f1f38 100%);
+}
+
+.bonus-option.superbonus:hover {
+    border-color: #ff66ff;
+    box-shadow: 0 10px 30px rgba(255, 0, 255, 0.4);
+}
+
+.option-title {
+    font-family: 'Cinzel', serif;
+    font-size: 24px;
+    color: #d4af37;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.bonus-option.superbonus .option-title {
+    color: #ff00ff;
+}
+
+.option-spins {
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 15px;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+}
+
+.option-cost {
+    font-size: 28px;
+    color: #d4af37;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.option-desc {
+    font-size: 16px;
+    color: #a08850;
+    font-style: italic;
+}
+
+.cancel-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    padding: 15px 40px;
+    margin-top: 10px;
+    border: 2px solid #666;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #3a3a45 0%, #2f2f38 100%);
+    color: #e8e8e8;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background: linear-gradient(135deg, #4a4a55 0%, #3f3f48 100%);
+    transform: translateY(-2px);
 }

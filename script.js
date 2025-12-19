@@ -1,6 +1,7 @@
 // --- ASETUKSET ---
 const symbols = [
-    { icon: "🌟", name: "Wild", value: 0, weight: 3, image: "images/wild.png", isWild: true }, // WILD - substitutes all
+    { icon: "W", name: "Wild", value: 0, weight: 3, image: "images/wild.png", isWild: true }, // WILD - substitutes all
+    { icon: "⭐", name: "Scatter", value: 0, weight: 2, image: "images/scatter.png", isScatter: true }, // SCATTER - free spins
     { icon: "⚡", name: "Zeus", value: 100, weight: 1, image: "images/zeus.png" },        // Zeus - rarest
     { icon: "💀", name: "Hades", value: 75, weight: 1.5, image: "images/hades.png" },    // Hades
     { icon: "🔱", name: "Poseidon", value: 50, weight: 2, image: "images/poseidon.png" }, // Poseidon
@@ -18,6 +19,11 @@ let spinSpeed = 1000; // Default spin speed (normal) - slower for better experie
 // Allowed bet values
 const allowedBets = [0.2, 0.5, 1, 2, 5, 10, 25, 50, 100, 200];
 
+// Free spins state
+let freeSpinsRemaining = 0;
+let isSuperBonus = false;
+let currentBet = 1;
+
 // Define 10 paylines (row indices for each of 5 reels)
 const paylines = [
     [1, 1, 1, 1, 1], // Line 1: Middle row
@@ -34,16 +40,23 @@ const paylines = [
 
 // --- PELILOGIIKKA ---
 function getWeightedSymbol() {
-    const totalWeight = symbols.reduce((sum, s) => sum + s.weight, 0);
+    let availableSymbols = symbols;
+    
+    // In superbonus mode, exclude low-value symbols (Vase and Grapes)
+    if (isSuperBonus) {
+        availableSymbols = symbols.filter(s => !['Vase', 'Grapes'].includes(s.name));
+    }
+    
+    const totalWeight = availableSymbols.reduce((sum, s) => sum + s.weight, 0);
     let random = Math.random() * totalWeight;
     
-    for (let symbol of symbols) {
+    for (let symbol of availableSymbols) {
         random -= symbol.weight;
         if (random <= 0) {
             return symbol;
         }
     }
-    return symbols[symbols.length - 1];
+    return availableSymbols[availableSymbols.length - 1];
 }
 
 function spin() {
@@ -64,6 +77,13 @@ function play() {
     const balanceLabel = document.getElementById('balance');
     const spinBtn = document.getElementById('spinBtn');
 
+    // Check if we're in free spins mode
+    if (freeSpinsRemaining > 0) {
+        // Use stored bet from when free spins were triggered
+        playWithBet(currentBet);
+        return;
+    }
+
     // Tarkista panos
     if (isNaN(bet) || bet < 0.2) {
         resultLabel.textContent = "⚠️ Minimum bet is €0.20!";
@@ -77,12 +97,24 @@ function play() {
         return;
     }
 
+    // Store current bet for potential free spins
+    currentBet = bet;
+    playWithBet(bet);
+}
+
+function playWithBet(bet) {
+    const resultLabel = document.getElementById('result');
+    const balanceLabel = document.getElementById('balance');
+    const spinBtn = document.getElementById('spinBtn');
+
     // Estä nappi kesken pyörityksen
     spinBtn.disabled = true;
 
-    // Vähennä panos
-    balance -= bet;
-    balanceLabel.textContent = balance.toFixed(2);
+    // Vähennä panos only if not in free spins
+    if (freeSpinsRemaining === 0) {
+        balance -= bet;
+        balanceLabel.textContent = balance.toFixed(2);
+    }
 
     // Get all reel elements (3 symbols x 5 reels = 15 elements)
     const allReels = document.querySelectorAll('.reel');
@@ -235,6 +267,55 @@ function checkWin(reels, bet) {
     balance += totalWin;
     balanceLabel.textContent = balance.toFixed(2);
 
+    // Handle free spins countdown first
+    if (freeSpinsRemaining > 0) {
+        freeSpinsRemaining--;
+        updateFreeSpinsCounter();
+        
+        if (freeSpinsRemaining > 0) {
+            // Auto-spin next free spin
+            setTimeout(() => play(), 2000);
+            return;
+        } else {
+            // End of free spins
+            isSuperBonus = false;
+            showFreeSpinsEndSummary();
+            spinBtn.disabled = false;
+            return;
+        }
+    }
+
+    // Count scatter symbols across all positions (only in normal play)
+    let scatterCount = 0;
+    for (let col = 0; col < 5; col++) {
+        for (let row = 0; row < 5; row++) {
+            if (reels[col][row].isScatter) {
+                scatterCount++;
+            }
+        }
+    }
+
+    // Check for scatter bonus (only trigger in normal play, not during free spins)
+    if (scatterCount >= 3) {
+        // Trigger free spins based on scatter count
+        let newFreeSpins = 0;
+        let isSuperBonusMode = false;
+        
+        if (scatterCount === 3) {
+            newFreeSpins = 10;
+        } else if (scatterCount === 4) {
+            newFreeSpins = 10;
+            isSuperBonusMode = true;
+        } else if (scatterCount >= 5) {
+            newFreeSpins = 20;
+            isSuperBonusMode = true;
+        }
+        
+        // Show free spins won animation, then offer gamble
+        showFreeSpinsAnimation(scatterCount, newFreeSpins, isSuperBonusMode);
+        return;
+    }
+
     // Check if balance is zero
     if (balance < 0.2) {
         resultLabel.textContent = "⚰️ Hades Claims Your Fortune!";
@@ -373,6 +454,167 @@ function toggleBetMenu() {
     dropdown.classList.toggle('show');
 }
 
+// Show free spins won animation
+function showFreeSpinsAnimation(scatterCount, spinsWon, isSuperBonusMode) {
+    const overlay = document.createElement('div');
+    overlay.className = 'free-spins-overlay';
+    overlay.innerHTML = `
+        <div class="free-spins-content">
+            <div class="scatter-stars">⭐ ⭐ ⭐${scatterCount >= 4 ? ' ⭐' : ''}${scatterCount >= 5 ? ' ⭐' : ''}</div>
+            <h2>${isSuperBonusMode ? '🏆 SUPERBONUS!' : '🎰 FREE SPINS!'}</h2>
+            <p class="free-spins-count">${spinsWon} FREE SPINS</p>
+            ${isSuperBonusMode ? '<p class="bonus-info">Low symbols removed!</p>' : ''}
+            <button class="gamble-btn" onclick="showGambleWheel(${spinsWon}, ${isSuperBonusMode})">🎲 GAMBLE</button>
+            <button class="collect-btn" onclick="startFreeSpins(${spinsWon}, ${isSuperBonusMode})">✓ COLLECT</button>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    setTimeout(() => overlay.classList.add('show'), 10);
+}
+
+// Show gamble wheel
+function showGambleWheel(currentSpins, isSuperBonusMode) {
+    // Remove free spins animation
+    const oldOverlay = document.querySelector('.free-spins-overlay');
+    if (oldOverlay) oldOverlay.remove();
+    
+    // Wheel options - if already superbonus, don't include superbonus option
+    const normalOptions = [5, 7, 5, 7, 15, 20];
+    const normalWithSuperOptions = [5, 7, 5, 7, 15, 20, 'SUPERBONUS'];
+    const options = isSuperBonusMode ? normalOptions : normalWithSuperOptions;
+    
+    const overlay = document.createElement('div');
+    overlay.className = 'gamble-overlay';
+    overlay.innerHTML = `
+        <div class="gamble-content">
+            <h2>🎰 GAMBLE YOUR FREE SPINS</h2>
+            <p class="current-spins">Current: ${currentSpins} spins${isSuperBonusMode ? ' (SUPERBONUS)' : ''}</p>
+            <div class="wheel-container">
+                <div class="wheel-pointer">▼</div>
+                <div class="wheel" id="gambleWheel">
+                    ${options.map((opt, i) => `
+                        <div class="wheel-segment" data-value="${opt}" style="transform: rotate(${(360 / options.length) * i}deg)">
+                            ${opt === 'SUPERBONUS' ? '<span class="superbonus-text">SUPER<br>BONUS</span>' : opt}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            <button class="spin-wheel-btn" onclick="spinGambleWheel(${currentSpins}, ${isSuperBonusMode})">SPIN WHEEL</button>
+            <button class="decline-btn" onclick="startFreeSpins(${currentSpins}, ${isSuperBonusMode})">DECLINE</button>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    setTimeout(() => overlay.classList.add('show'), 10);
+}
+
+// Spin gamble wheel
+function spinGambleWheel(currentSpins, wasSuperBonus) {
+    const wheel = document.getElementById('gambleWheel');
+    const spinBtn = document.querySelector('.spin-wheel-btn');
+    const declineBtn = document.querySelector('.decline-btn');
+    
+    spinBtn.disabled = true;
+    declineBtn.disabled = true;
+    
+    // Get options based on mode
+    const normalOptions = [5, 7, 5, 7, 15, 20];
+    const normalWithSuperOptions = [5, 7, 5, 7, 15, 20, 'SUPERBONUS'];
+    const options = wasSuperBonus ? normalOptions : normalWithSuperOptions;
+    
+    // Random result
+    const resultIndex = Math.floor(Math.random() * options.length);
+    const result = options[resultIndex];
+    
+    // Calculate rotation (multiple full spins + landing position)
+    const segmentAngle = 360 / options.length;
+    const baseRotation = 360 * 5; // 5 full spins
+    const targetRotation = baseRotation + (resultIndex * segmentAngle) + (segmentAngle / 2);
+    
+    wheel.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
+    wheel.style.transform = `rotate(${targetRotation}deg)`;
+    
+    setTimeout(() => {
+        let newSpins;
+        let newSuperBonus = wasSuperBonus;
+        
+        if (result === 'SUPERBONUS') {
+            newSpins = 10;
+            newSuperBonus = true;
+            showGambleResult('🏆 SUPERBONUS!', newSpins, newSuperBonus);
+        } else {
+            newSpins = result;
+            showGambleResult(result > currentSpins ? '🎉 UPGRADE!' : '😔 DOWNGRADE', newSpins, newSuperBonus);
+        }
+    }, 4000);
+}
+
+// Show gamble result
+function showGambleResult(message, spins, isSuperBonusMode) {
+    const overlay = document.querySelector('.gamble-overlay');
+    overlay.innerHTML = `
+        <div class="gamble-content">
+            <h2>${message}</h2>
+            <p class="free-spins-count">${spins} FREE SPINS</p>
+            ${isSuperBonusMode ? '<p class="bonus-info">🏆 SUPERBONUS MODE</p>' : ''}
+            <button class="collect-btn" onclick="startFreeSpins(${spins}, ${isSuperBonusMode})">START FREE SPINS</button>
+        </div>
+    `;
+}
+
+// Start free spins
+function startFreeSpins(spins, isSuperBonusMode) {
+    // Remove overlays
+    document.querySelectorAll('.free-spins-overlay, .gamble-overlay').forEach(el => el.remove());
+    
+    freeSpinsRemaining = spins;
+    isSuperBonus = isSuperBonusMode;
+    
+    // Show free spins counter
+    updateFreeSpinsCounter();
+    
+    // Start first free spin
+    setTimeout(() => play(), 1000);
+}
+
+// Update free spins counter display
+function updateFreeSpinsCounter() {
+    let counter = document.getElementById('freeSpinsCounter');
+    
+    if (!counter) {
+        counter = document.createElement('div');
+        counter.id = 'freeSpinsCounter';
+        counter.className = 'free-spins-counter';
+        document.querySelector('.slot-machine').appendChild(counter);
+    }
+    
+    if (freeSpinsRemaining > 0) {
+        counter.innerHTML = `
+            <div class="counter-content">
+                <span class="counter-label">${isSuperBonus ? '🏆 SUPERBONUS' : '🎰 FREE SPINS'}</span>
+                <span class="counter-value">${freeSpinsRemaining}</span>
+            </div>
+        `;
+        counter.style.display = 'block';
+    } else {
+        counter.style.display = 'none';
+    }
+}
+
+// Show free spins end summary
+function showFreeSpinsEndSummary() {
+    const overlay = document.createElement('div');
+    overlay.className = 'free-spins-overlay';
+    overlay.innerHTML = `
+        <div class="free-spins-content">
+            <h2>🎊 FREE SPINS COMPLETE!</h2>
+            <p class="summary-text">Return to normal play</p>
+            <button class="collect-btn" onclick="this.parentElement.parentElement.remove()">CONTINUE</button>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    setTimeout(() => overlay.classList.add('show'), 10);
+}
+
 // Update bet display
 function updateBetDisplay() {
     const betInput = document.getElementById('bet');
@@ -420,3 +662,104 @@ document.getElementById('bet').addEventListener('keypress', (e) => {
         play();
     }
 });
+// Toggle buy bonus dropdown menu
+function toggleBuyBonusMenu() {
+    const dropdown = document.getElementById('buyBonusDropdown');
+    const betInput = document.getElementById('bet');
+    const currentBet = parseFloat(betInput.value) || 1;
+    
+    // Calculate costs for each option
+    const scatter3Cost = currentBet * 50;   // 10 free spins (normal)
+    const scatter4Cost = currentBet * 75;   // 10 free spins (superbonus)
+    const scatter5Cost = currentBet * 100;  // 20 free spins (superbonus)
+    
+    // Populate dropdown with options
+    dropdown.innerHTML = `
+        <div class="bonus-buy-option ${balance < scatter3Cost ? 'disabled' : ''}" onclick="buyBonusFromDropdown(10, false, ${scatter3Cost})">
+            <div class="bonus-buy-info">
+                <div class="bonus-buy-title">⭐⭐⭐ 3 Scatters</div>
+                <div class="bonus-buy-desc">10 Free Spins</div>
+            </div>
+            <div class="bonus-buy-cost">€${scatter3Cost.toFixed(2)}</div>
+        </div>
+        <div class="bonus-buy-option superbonus ${balance < scatter4Cost ? 'disabled' : ''}" onclick="buyBonusFromDropdown(10, true, ${scatter4Cost})">
+            <div class="bonus-buy-info">
+                <div class="bonus-buy-title">⭐⭐⭐⭐ 4 Scatters</div>
+                <div class="bonus-buy-desc">10 Spins (Superbonus)</div>
+            </div>
+            <div class="bonus-buy-cost">€${scatter4Cost.toFixed(2)}</div>
+        </div>
+        <div class="bonus-buy-option superbonus ${balance < scatter5Cost ? 'disabled' : ''}" onclick="buyBonusFromDropdown(20, true, ${scatter5Cost})">
+            <div class="bonus-buy-info">
+                <div class="bonus-buy-title">⭐⭐⭐⭐⭐ 5 Scatters</div>
+                <div class="bonus-buy-desc">20 Spins (Superbonus)</div>
+            </div>
+            <div class="bonus-buy-cost">€${scatter5Cost.toFixed(2)}</div>
+        </div>
+    `;
+    
+    dropdown.classList.toggle('show');
+}
+
+// Buy bonus from dropdown
+function buyBonusFromDropdown(spins, isSuperBonusMode, cost) {
+    // Check if player can afford
+    if (balance < cost) {
+        return;
+    }
+    
+    // Close dropdown
+    const dropdown = document.getElementById('buyBonusDropdown');
+    dropdown.classList.remove('show');
+    
+    // Deduct cost from balance
+    balance -= cost;
+    const balanceLabel = document.getElementById('balance');
+    balanceLabel.textContent = balance.toFixed(2);
+    
+    // Show bought bonus animation with gamble option
+    const confirmOverlay = document.createElement('div');
+    confirmOverlay.className = 'free-spins-overlay';
+    confirmOverlay.innerHTML = `
+        <div class="free-spins-content">
+            <h2>🎊 BONUS PURCHASED!</h2>
+            <p class="free-spins-count">${spins} FREE SPINS</p>
+            ${isSuperBonusMode ? '<p class="bonus-info">🏆 SUPERBONUS MODE</p>' : ''}
+            <button class="gamble-btn" onclick="showGambleWheel(${spins}, ${isSuperBonusMode})">🎲 GAMBLE</button>
+            <button class="collect-btn" onclick="startFreeSpins(${spins}, ${isSuperBonusMode})">✓ COLLECT</button>
+        </div>
+    `;
+    document.body.appendChild(confirmOverlay);
+    setTimeout(() => confirmOverlay.classList.add('show'), 10);
+}
+
+// Buy bonus and start free spins
+function buyBonus(spins, isSuperBonusMode, cost) {
+    // Check if player can afford
+    if (balance < cost) {
+        return;
+    }
+    
+    // Deduct cost from balance
+    balance -= cost;
+    const balanceLabel = document.getElementById('balance');
+    balanceLabel.textContent = balance.toFixed(2);
+    
+    // Remove buy menu
+    const overlay = document.querySelector('.buy-bonus-overlay');
+    if (overlay) overlay.remove();
+    
+    // Show bought bonus animation
+    const confirmOverlay = document.createElement('div');
+    confirmOverlay.className = 'free-spins-overlay';
+    confirmOverlay.innerHTML = `
+        <div class="free-spins-content">
+            <h2>🎊 BONUS PURCHASED!</h2>
+            <p class="free-spins-count">${spins} FREE SPINS</p>
+            ${isSuperBonusMode ? '<p class="bonus-info">🏆 SUPERBONUS MODE</p>' : ''}
+            <button class="collect-btn" onclick="startFreeSpins(${spins}, ${isSuperBonusMode})">START FREE SPINS</button>
+        </div>
+    `;
+    document.body.appendChild(confirmOverlay);
+    setTimeout(() => confirmOverlay.classList.add('show'), 10);
+}

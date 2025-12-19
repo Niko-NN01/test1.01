@@ -91,7 +91,15 @@
                     </div>
                 </div>
             </div>
-            <button id="spinBtn" onclick="play()">⚡ SPIN THE FATES ⚡</button>
+            <div class="action-buttons">
+                <button id="spinBtn" onclick="play()">⚡ SPIN THE FATES ⚡</button>
+                <div class="buy-bonus-container">
+                    <button class="buy-bonus-btn" onclick="toggleBuyBonusMenu()">🎁 BUY BONUS</button>
+                    <div class="buy-bonus-dropdown" id="buyBonusDropdown">
+                        <!-- Options will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="result" id="result"></div>
@@ -106,7 +114,8 @@
             <div class="info-section">
                 <h3>🎰 SYMBOL VALUES</h3>
                 <div class="info-grid">
-                    <div class="info-item special"><span class="symbol">🌟</span> <strong>WILD</strong> - Substitutes all symbols<br>x5 = 200x bet</div>
+                    <div class="info-item special"><span class="symbol">W</span> <strong>WILD</strong> - Substitutes all symbols<br>x5 = 200x bet</div>
+                    <div class="info-item special"><span class="symbol">⭐</span> <strong>SCATTER</strong> - 3+ = FREE SPINS<br>3 = 10 spins | 4 = Superbonus | 5 = 20 spins</div>
                     <div class="info-item"><span class="symbol">⚡</span> <strong>Zeus</strong> - x5 = 100x | x4 = 50x | x3 = 20x</div>
                     <div class="info-item"><span class="symbol">💀</span> <strong>Hades</strong> - x5 = 75x | x4 = 37x | x3 = 15x</div>
                     <div class="info-item"><span class="symbol">🔱</span> <strong>Poseidon</strong> - x5 = 50x | x4 = 25x | x3 = 10x</div>
