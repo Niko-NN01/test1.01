@@ -281,10 +281,9 @@ function checkWin(reels, bet) {
         updateFreeSpinsCounter();
         
         if (freeSpinsRemaining > 0) {
-            // Auto-spin next free spin after delay
+            // Auto-spin next free spin after delay - call playWithBet directly
             setTimeout(() => {
-                spinBtn.disabled = false; // Enable button before calling play
-                play();
+                playWithBet(currentBet);
             }, 2000);
         } else {
             // End of free spins
