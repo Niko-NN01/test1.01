@@ -165,11 +165,12 @@ h1 {
 }
 
 .reel.spin {
-    animation: spinReel 0.3s linear infinite;
+    animation: scrollReel 0.1s linear infinite;
+    overflow: hidden;
 }
 
 .reel.stop {
-    animation: stopReel 0.2s ease-out;
+    animation: stopReel 0.3s ease-out;
 }
 
 /* Symbol images */
@@ -180,42 +181,28 @@ h1 {
     filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
 }
 
-.payline-info {
-    margin-top: 10px;
-    font-size: 0.85em;
-    color: #87ceeb;
-    text-align: center;
-    font-style: italic;
-}
-
-@keyframes spinReel {
+@keyframes scrollReel {
     0% { 
-        transform: translateY(0) rotateX(0deg);
-        filter: blur(0px) brightness(1);
-    }
-    50% { 
-        transform: translateY(-10px) rotateX(180deg);
-        filter: blur(3px) brightness(1.5);
-        box-shadow: 
-            0 10px 30px rgba(255, 215, 0, 0.8),
-            0 0 50px rgba(255, 215, 0, 0.6);
+        transform: translateY(0);
     }
     100% { 
-        transform: translateY(0) rotateX(360deg);
-        filter: blur(0px) brightness(1);
+        transform: translateY(-100%);
     }
 }
 
 @keyframes stopReel {
     0% {
-        transform: scale(1.3);
-        filter: brightness(2);
+        transform: translateY(-20px) scale(1.15);
+        filter: brightness(1.8);
         box-shadow: 
-            0 0 40px rgba(255, 215, 0, 1),
-            0 0 80px rgba(255, 215, 0, 0.8);
+            0 0 30px rgba(255, 215, 0, 1),
+            0 0 60px rgba(255, 215, 0, 0.8);
+    }
+    50% {
+        transform: translateY(5px) scale(1.05);
     }
     100% {
-        transform: scale(1);
+        transform: translateY(0) scale(1);
         filter: brightness(1);
     }
 }
@@ -390,66 +377,6 @@ h1 {
     50% { transform: scale(1.2); }
 }
 
-.paytable {
-    margin-top: 30px;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.4);
-    border-radius: 15px;
-    border: 1px solid rgba(255, 215, 0, 0.3);
-}
-
-.paytable h3 {
-    color: #ffd700;
-    margin-bottom: 15px;
-    font-size: 1.2em;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
-}
-
-.paytable-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    font-size: 0.9em;
-}
-
-.pay-item {
-    background: rgba(15, 52, 96, 0.5);
-    padding: 8px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 215, 0, 0.2);
-    color: #87ceeb;
-}
-
-.pay-item .symbol {
-    font-size: 1.3em;
-    margin-right: 5px;
-}
-
-.wild-item {
-    background: linear-gradient(145deg, rgba(138, 43, 226, 0.3), rgba(75, 0, 130, 0.3));
-    border: 2px solid #ff00ff;
-    color: #ffb3ff;
-    font-weight: bold;
-    animation: wildGlow 2s ease-in-out infinite;
-}
-
-@keyframes wildGlow {
-    0%, 100% { 
-        box-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
-    }
-    50% { 
-        box-shadow: 0 0 20px rgba(255, 0, 255, 0.6);
-    }
-}
-
-.wild-info {
-    margin-top: 10px;
-    font-size: 0.85em;
-    color: #ffb3ff;
-    text-align: center;
-    font-style: italic;
-}
-
 /* Info Button */
 .info-btn {
     position: fixed;
@@ -524,9 +451,20 @@ h1 {
 .info-content h2 {
     color: #ffd700;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     font-size: 1.8em;
     text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+}
+
+.info-section {
+    margin-bottom: 20px;
+}
+
+.info-section h3 {
+    color: #ffd700;
+    margin-bottom: 12px;
+    font-size: 1.3em;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
 }
 
 .info-grid {
