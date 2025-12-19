@@ -723,7 +723,7 @@ input:checked + .toggle-slider:before {
     border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 16px;
     padding: 40px;
-    max-width: 600px;
+    max-width: 700px;
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
@@ -816,7 +816,94 @@ input:checked + .toggle-slider:before {
     font-size: 0.9em;
 }
 
+/* Paylines Section */
+.paylines-section {
+    margin-top: 25px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.paylines-section h3 {
+    color: #d4af37;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+    text-align: center;
+}
+
+.paylines-description {
+    color: #a08850;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 0.95em;
+}
+
+.paylines-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.payline-item {
+    background: rgba(212, 175, 55, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+}
+
+.payline-label {
+    color: #d4af37;
+    font-weight: 600;
+    font-size: 0.9em;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.payline-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin: 10px 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.payline-row {
+    display: flex;
+    gap: 3px;
+    justify-content: center;
+}
+
+.payline-row span {
+    width: 14px;
+    height: 14px;
+    background: rgba(100, 100, 120, 0.3);
+    border: 1px solid rgba(150, 150, 170, 0.3);
+    border-radius: 3px;
+}
+
+.payline-row span.active {
+    background: linear-gradient(135deg, #d4af37 0%, #f4e5c3 50%, #d4af37 100%);
+    border-color: #d4af37;
+    box-shadow: 
+        0 0 8px rgba(212, 175, 55, 0.6),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.payline-desc {
+    color: #a08850;
+    font-size: 0.85em;
+    margin-top: 8px;
+    font-style: italic;
+}
+
 @media (max-width: 768px) {
+    .paylines-grid {
+        grid-template-columns: 1fr;
+    }
+    
     .container {
         padding: 20px;
     }
