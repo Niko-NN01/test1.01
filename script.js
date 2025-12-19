@@ -13,7 +13,7 @@ const symbols = [
 ];
 let balance = 100;
 let useImages = false; // Set to true when you have images added
-let spinSpeed = 300; // Default spin speed (lower = faster)
+let spinSpeed = 300; // Default spin speed (turbo)
 
 // Define 10 paylines (row indices for each of 5 reels)
 const paylines = [
@@ -252,12 +252,12 @@ function setSpeed(speed) {
     const buttons = document.querySelectorAll('.speed-btn');
     buttons.forEach(btn => btn.classList.remove('active'));
     
-    if (speed === 'slow') {
-        spinSpeed = 500;
-        document.querySelector('[data-speed="slow"]').classList.add('active');
-    } else if (speed === 'normal') {
-        spinSpeed = 300;
+    if (speed === 'normal') {
+        spinSpeed = 700;
         document.querySelector('[data-speed="normal"]').classList.add('active');
+    } else if (speed === 'turbo') {
+        spinSpeed = 300;
+        document.querySelector('[data-speed="turbo"]').classList.add('active');
     } else if (speed === 'fast') {
         spinSpeed = 150;
         document.querySelector('[data-speed="fast"]').classList.add('active');
