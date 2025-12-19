@@ -401,13 +401,18 @@ function checkWin(reels, bet) {
         freeSpinsRemaining--;
         updateFreeSpinsCounter();
         
+        console.log(`Free spins remaining: ${freeSpinsRemaining}`);
+        
         if (freeSpinsRemaining > 0) {
             // Auto-spin next free spin after delay - call playWithBet directly
+            console.log('Scheduling next free spin...');
             setTimeout(() => {
+                console.log('Executing next free spin');
                 playWithBet(currentBet);
             }, 2000);
         } else {
             // End of free spins
+            console.log('Free spins ended');
             isSuperBonus = false;
             spinBtn.disabled = false;
             showFreeSpinsEndSummary();
