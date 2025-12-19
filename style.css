@@ -113,24 +113,24 @@ h1 {
 .reels-grid {
     display: flex;
     justify-content: center;
-    gap: 12px;
+    gap: 15px;
     flex-wrap: wrap;
 }
 
 .reel-column {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .reel {
     background: transparent;
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 50px;
+    font-size: 60px;
     border-radius: 15px;
     border: 3px solid #ffd700;
     box-shadow: 
@@ -173,8 +173,8 @@ h1 {
 
 /* Symbol images */
 .symbol-img {
-    width: 70px;
-    height: 70px;
+    width: 85px;
+    height: 85px;
     object-fit: contain;
     filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
 }
