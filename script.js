@@ -283,16 +283,16 @@ function checkWin(reels, bet) {
         if (freeSpinsRemaining > 0) {
             // Auto-spin next free spin after delay
             setTimeout(() => {
+                spinBtn.disabled = false; // Enable button before calling play
                 play();
             }, 2000);
-            return;
         } else {
             // End of free spins
             isSuperBonus = false;
-            showFreeSpinsEndSummary();
             spinBtn.disabled = false;
-            return;
+            showFreeSpinsEndSummary();
         }
+        return; // Don't continue to scatter check or manual button enable
     }
 
     // Count scatter symbols across all positions (only in normal play)
