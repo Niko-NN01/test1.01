@@ -69,22 +69,26 @@
                 </label>
             </div>
             <div class="bet-controls">
-                <label>Bet Amount:</label>
-                <div class="bet-buttons">
-                    <button class="bet-btn" onclick="adjustBet(-10)">-10</button>
-                    <button class="bet-btn" onclick="adjustBet(-5)">-5</button>
-                    <button class="bet-btn" onclick="adjustBet(-1)">-1</button>
-                    <input type="number" id="bet" value="10" min="1" placeholder="Bet">
-                    <button class="bet-btn" onclick="adjustBet(1)">+1</button>
-                    <button class="bet-btn" onclick="adjustBet(5)">+5</button>
-                    <button class="bet-btn" onclick="adjustBet(10)">+10</button>
-                </div>
-                <div class="bet-presets">
-                    <button class="preset-btn" onclick="setBet(1)">MIN</button>
-                    <button class="preset-btn" onclick="setBet(10)">10</button>
-                    <button class="preset-btn" onclick="setBet(25)">25</button>
-                    <button class="preset-btn" onclick="setBet(50)">50</button>
-                    <button class="preset-btn" onclick="setBet(balance)">MAX</button>
+                <label class="bet-label" onclick="toggleBetMenu()">
+                    Bet Amount: <span id="currentBetDisplay">10</span> ▼
+                </label>
+                <div class="bet-dropdown" id="betDropdown">
+                    <div class="bet-buttons">
+                        <button class="bet-btn" onclick="adjustBet(-10)">-10</button>
+                        <button class="bet-btn" onclick="adjustBet(-5)">-5</button>
+                        <button class="bet-btn" onclick="adjustBet(-1)">-1</button>
+                        <input type="number" id="bet" value="10" min="1" placeholder="Bet" onchange="updateBetDisplay()">
+                        <button class="bet-btn" onclick="adjustBet(1)">+1</button>
+                        <button class="bet-btn" onclick="adjustBet(5)">+5</button>
+                        <button class="bet-btn" onclick="adjustBet(10)">+10</button>
+                    </div>
+                    <div class="bet-presets">
+                        <button class="preset-btn" onclick="setBet(1)">MIN</button>
+                        <button class="preset-btn" onclick="setBet(10)">10</button>
+                        <button class="preset-btn" onclick="setBet(25)">25</button>
+                        <button class="preset-btn" onclick="setBet(50)">50</button>
+                        <button class="preset-btn" onclick="setBet(balance)">MAX</button>
+                    </div>
                 </div>
             </div>
             <button id="spinBtn" onclick="play()">⚡ SPIN THE FATES ⚡</button>

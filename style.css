@@ -449,13 +449,54 @@ input:checked + .toggle-slider:before {
     gap: 10px;
     align-items: center;
     width: 100%;
+    position: relative;
 }
 
-.bet-controls label {
-    color: #ffd700;
-    font-weight: bold;
-    font-size: 1.1em;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+.bet-label {
+    color: #d4af37;
+    font-weight: 600;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 12px 25px;
+    background: linear-gradient(135deg, #2a2a35 0%, #1f1f28 100%);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 10px;
+    transition: all 0.3s;
+    user-select: none;
+    letter-spacing: 1px;
+}
+
+.bet-label:hover {
+    background: linear-gradient(135deg, #3a3a45 0%, #2f2f38 100%);
+    border-color: #d4af37;
+}
+
+#currentBetDisplay {
+    color: #d4af37;
+    font-weight: 700;
+    margin: 0 5px;
+}
+
+.bet-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(165deg, #1a1a22 0%, #12121a 100%);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 10px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    min-width: 400px;
+}
+
+.bet-dropdown.show {
+    display: flex;
 }
 
 .bet-buttons {

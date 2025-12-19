@@ -299,12 +299,29 @@ function adjustBet(amount) {
     // Ensure bet is at least 1 and not more than balance
     newBet = Math.max(1, Math.min(newBet, balance));
     betInput.value = newBet;
+    updateBetDisplay();
 }
 
 function setBet(amount) {
     const betInput = document.getElementById('bet');
     let newBet = Math.max(1, Math.min(amount, balance));
     betInput.value = newBet;
+    updateBetDisplay();
+}
+
+// Toggle bet dropdown menu
+function toggleBetMenu() {
+    const dropdown = document.getElementById('betDropdown');
+    dropdown.classList.toggle('show');
+}
+
+// Update bet display
+function updateBetDisplay() {
+    const betInput = document.getElementById('bet');
+    const display = document.getElementById('currentBetDisplay');
+    if (display) {
+        display.textContent = betInput.value;
+    }
 }
 
 // Turbo mode toggle
@@ -328,6 +345,13 @@ window.addEventListener('click', (e) => {
     const modal = document.getElementById('infoModal');
     if (e.target === modal) {
         modal.classList.remove('show');
+    }
+    
+    // Close bet dropdown when clicking outside
+    const dropdown = document.getElementById('betDropdown');
+    const betLabel = document.querySelector('.bet-label');
+    if (dropdown && !dropdown.contains(e.target) && e.target !== betLabel) {
+        dropdown.classList.remove('show');
     }
 });
 
