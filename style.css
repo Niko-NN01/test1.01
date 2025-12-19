@@ -94,7 +94,7 @@ h1 {
 }
 
 .reels-container {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.2);
     padding: 20px;
     border-radius: 15px;
     margin: 20px 0;
@@ -124,13 +124,13 @@ h1 {
 }
 
 .reel {
-    background: linear-gradient(145deg, #0f3460 0%, #16213e 100%);
-    width: 80px;
-    height: 80px;
+    background: rgba(15, 52, 96, 0.3);
+    width: 100px;
+    height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 40px;
+    font-size: 50px;
     border-radius: 15px;
     border: 3px solid #ffd700;
     box-shadow: 
@@ -175,8 +175,8 @@ h1 {
 
 /* Symbol images */
 .symbol-img {
-    width: 55px;
-    height: 55px;
+    width: 70px;
+    height: 70px;
     object-fit: contain;
     filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
 }
@@ -534,9 +534,14 @@ h1 {
     }
     
     .reel {
-        width: 55px;
-        height: 55px;
-        font-size: 28px;
+        width: 70px;
+        height: 70px;
+        font-size: 35px;
+    }
+
+    .symbol-img {
+        width: 50px;
+        height: 50px;
     }
     
     .paytable-grid {
@@ -546,12 +551,21 @@ h1 {
 
 @media (max-width: 480px) {
     .reel {
-        width: 55px;
-        height: 55px;
-        font-size: 28px;
+        width: 60px;
+        height: 60px;
+        font-size: 30px;
+    }
+
+    .symbol-img {
+        width: 45px;
+        height: 45px;
     }
     
-    .reels {
+    .reels-grid {
+        gap: 5px;
+    }
+
+    .reel-column {
         gap: 5px;
     }
 }

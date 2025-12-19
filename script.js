@@ -43,13 +43,13 @@ function getWeightedSymbol() {
 }
 
 function spin() {
-    // Return 3x5 grid (3 symbols per reel, 5 reels)
+    // Return 5x5 grid (5 symbols per reel, 5 reels)
     return [
-        [getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol()],
-        [getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol()],
-        [getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol()],
-        [getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol()],
-        [getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol()]
+        [getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol()],
+        [getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol()],
+        [getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol()],
+        [getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol()],
+        [getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol()]
     ];
 }
 
@@ -99,7 +99,7 @@ function play() {
     // Stop reels column by column with delay
     for (let col = 0; col < 5; col++) {
         setTimeout(() => {
-            for (let row = 0; row < 3; row++) {
+            for (let row = 0; row < 5; row++) {
                 const reel = document.querySelector(`[data-reel="${col}"][data-row="${row}"]`);
                 clearInterval(parseInt(reel.dataset.spinInterval));
                 displaySymbol(reel, reels[col][row]);
