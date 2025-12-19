@@ -26,8 +26,102 @@ let currentBet = 1;
 
 // Audio Context for sound effects
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-let spinningOscillator = null;
-let spinningGain = null;
+let backgroundMusicNodes = [];
+let isMusicPlaying = false;
+
+// Start mythological background music
+function startBackgroundMusic() {
+    if (isMusicPlaying) return;
+    
+    // Try HTML audio first
+    const bgAudio = document.getElementById('bgMusic');
+    if (bgAudio && bgAudio.src) {
+        bgAudio.volume = 0.3;
+        bgAudio.play().catch(() => playGeneratedMusic());
+        isMusicPlaying = true;
+    } else {
+        playGeneratedMusic();
+    }
+}
+
+// Generate epic mythological music using Web Audio API
+function playGeneratedMusic() {
+    if (isMusicPlaying) return;
+    isMusicPlaying = true;
+    
+    // Epic chord progression in minor key (Am - F - C - G)
+    const chordProgression = [
+        [220, 261.63, 329.63], // A minor
+        [174.61, 220, 261.63], // F major
+        [261.63, 329.63, 392],  // C major
+        [196, 246.94, 293.66]   // G major
+    ];
+    
+    let chordIndex = 0;
+    
+    function playChord() {
+        // Stop previous chord
+        backgroundMusicNodes.forEach(node => {
+            if (node.gain) {
+                node.gain.gain.linearRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            }
+            if (node.osc) {
+                node.osc.stop(audioContext.currentTime + 0.6);
+            }
+        });
+        backgroundMusicNodes = [];
+        
+        if (!isMusicPlaying) return;
+        
+        const chord = chordProgression[chordIndex];
+        chordIndex = (chordIndex + 1) % chordProgression.length;
+        
+        // Play each note in the chord
+        chord.forEach((freq, i) => {
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            osc.type = 'sine';
+            osc.frequency.value = freq / 2; // Lower octave for epic feel
+            
+            gain.gain.setValueAtTime(0, audioContext.currentTime);
+            gain.gain.linearRampToValueAtTime(0.03, audioContext.currentTime + 0.3);
+            gain.gain.setValueAtTime(0.03, audioContext.currentTime + 1.5);
+            
+            osc.start(audioContext.currentTime);
+            
+            backgroundMusicNodes.push({ osc, gain });
+        });
+        
+        // Schedule next chord
+        if (isMusicPlaying) {
+            setTimeout(playChord, 2000); // Change chord every 2 seconds
+        }
+    }
+    
+    playChord();
+}
+
+function stopBackgroundMusic() {
+    isMusicPlaying = false;
+    backgroundMusicNodes.forEach(node => {
+        if (node.gain) {
+            node.gain.gain.linearRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+        }
+        if (node.osc) {
+            node.osc.stop(audioContext.currentTime + 0.6);
+        }
+    });
+    backgroundMusicNodes = [];
+    
+    const bgAudio = document.getElementById('bgMusic');
+    if (bgAudio) {
+        bgAudio.pause();
+    }
+}
 
 // Play sound effect
 function playSound(type) {
@@ -88,48 +182,6 @@ function playBeep(type) {
                 osc.stop(audioContext.currentTime + i * 0.1 + 0.1);
             });
             break;
-        case 'spin':
-            // Continuous spinning sound
-            stopSpinSound(); // Stop any existing spin sound
-            
-            spinningOscillator = audioContext.createOscillator();
-            spinningGain = audioContext.createGain();
-            
-            spinningOscillator.connect(spinningGain);
-            spinningGain.connect(audioContext.destination);
-            
-            spinningOscillator.type = 'sawtooth';
-            spinningOscillator.frequency.value = 80;
-            
-            // Create a pulsing effect
-            const lfo = audioContext.createOscillator();
-            const lfoGain = audioContext.createGain();
-            lfo.frequency.value = 8; // 8 Hz pulsing
-            lfoGain.gain.value = 20;
-            lfo.connect(lfoGain);
-            lfoGain.connect(spinningOscillator.frequency);
-            
-            spinningGain.gain.setValueAtTime(0, audioContext.currentTime);
-            spinningGain.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + 0.1);
-            
-            lfo.start(audioContext.currentTime);
-            spinningOscillator.start(audioContext.currentTime);
-            
-            // Store LFO for cleanup
-            spinningOscillator.lfo = lfo;
-            break;
-    }
-}
-
-function stopSpinSound() {
-    if (spinningOscillator && spinningGain) {
-        spinningGain.gain.linearRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
-        spinningOscillator.stop(audioContext.currentTime + 0.15);
-        if (spinningOscillator.lfo) {
-            spinningOscillator.lfo.stop(audioContext.currentTime + 0.15);
-        }
-        spinningOscillator = null;
-        spinningGain = null;
     }
 }
 
@@ -236,8 +288,8 @@ function playWithBet(bet) {
         reel.classList.remove('spin', 'stop', 'winning', 'potential-win');
     });
 
-    // Play spin sound
-    playSound('spin');
+    // Start background music on first interaction
+    startBackgroundMusic();
     
     // Start spinning all reels
     allReels.forEach((reel) => {
@@ -271,7 +323,6 @@ function playWithBet(bet) {
             
             // Check win after last column stops
             if (col === 4) {
-                stopSpinSound(); // Stop spinning sound
                 setTimeout(() => checkWin(reels, bet), 300);
             }
         }, 500 + (col * spinSpeed));
