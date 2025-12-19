@@ -8,6 +8,7 @@
 </head>
 <body>
     <div class="background-overlay"></div>
+    <button class="info-btn" onclick="toggleInfo()">ℹ️ INFO</button>
     <div class="container">
         <h1>⚡ OLYMPUS SLOTS ⚡</h1>
         <p class="subtitle">Fortune of the Gods</p>
@@ -89,6 +90,34 @@
         </div>
         
         <div class="result" id="result"></div>
+    </div>
+
+    <!-- Info Modal -->
+    <div class="info-modal" id="infoModal">
+        <div class="info-content">
+            <span class="close-btn" onclick="toggleInfo()">✕</span>
+            <h2>💎 SYMBOL VALUES 💎</h2>
+            <div class="info-grid">
+                <div class="info-item special"><span class="symbol">🌟</span> <strong>WILD</strong> - Substitutes all symbols<br>x5 = 200x bet</div>
+                <div class="info-item"><span class="symbol">⚡</span> <strong>Zeus</strong> - x5 = 100x | x4 = 50x | x3 = 20x</div>
+                <div class="info-item"><span class="symbol">💀</span> <strong>Hades</strong> - x5 = 75x | x4 = 37x | x3 = 15x</div>
+                <div class="info-item"><span class="symbol">🔱</span> <strong>Poseidon</strong> - x5 = 50x | x4 = 25x | x3 = 10x</div>
+                <div class="info-item"><span class="symbol">🦉</span> <strong>Athena</strong> - x5 = 25x | x4 = 12x | x3 = 5x</div>
+                <div class="info-item"><span class="symbol">⚔️</span> <strong>Ares</strong> - x5 = 15x | x4 = 7x | x3 = 3x</div>
+                <div class="info-item"><span class="symbol">👑</span> <strong>Crown</strong> - x5 = 10x | x4 = 5x | x3 = 2x</div>
+                <div class="info-item"><span class="symbol">🏛️</span> <strong>Temple</strong> - x5 = 8x | x4 = 4x | x3 = 1x</div>
+                <div class="info-item"><span class="symbol">🏺</span> <strong>Vase</strong> - x5 = 5x | x4 = 2x | x3 = 1x</div>
+                <div class="info-item"><span class="symbol">🍇</span> <strong>Grapes</strong> - x5 = 3x | x4 = 1x | x3 = 0x</div>
+            </div>
+            <div class="info-rules">
+                <h3>🎰 HOW TO PLAY</h3>
+                <p>• Playing 10 paylines on a 3x5 grid</p>
+                <p>• Match 3+ symbols left to right on any payline to win</p>
+                <p>• Win on multiple paylines simultaneously!</p>
+                <p>• Wilds substitute for any symbol to complete wins</p>
+                <p>• Set your bet and spin the fates!</p>
+            </div>
+        </div>
     </div>
     
     <script src="script.js"></script>

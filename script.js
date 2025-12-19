@@ -113,9 +113,7 @@ function play() {
                 setTimeout(() => checkWin(reels, bet), 300);
             }
         }, 500 + (col * 300));
-            }
-        }, 500 + (index * 300));
-    });
+    }
 }
 
 function checkWin(reels, bet) {
@@ -247,6 +245,20 @@ function setBet(amount) {
     let newBet = Math.max(1, Math.min(amount, balance));
     betInput.value = newBet;
 }
+
+// Toggle info modal
+function toggleInfo() {
+    const modal = document.getElementById('infoModal');
+    modal.classList.toggle('show');
+}
+
+// Close modal when clicking outside
+window.addEventListener('click', (e) => {
+    const modal = document.getElementById('infoModal');
+    if (e.target === modal) {
+        modal.classList.remove('show');
+    }
+});
 
 // Enter-näppäin toimii myös
 document.getElementById('bet').addEventListener('keypress', (e) => {
