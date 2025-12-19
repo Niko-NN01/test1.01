@@ -94,11 +94,11 @@ h1 {
 }
 
 .reels-container {
-    background: rgba(0, 0, 0, 0.2);
+    background: transparent;
     padding: 20px;
     border-radius: 15px;
     margin: 20px 0;
-    border: 2px solid rgba(255, 215, 0, 0.2);
+    border: 2px solid rgba(255, 215, 0, 0.3);
 }
 
 .paylines-info {
@@ -124,7 +124,7 @@ h1 {
 }
 
 .reel {
-    background: rgba(15, 52, 96, 0.3);
+    background: transparent;
     width: 100px;
     height: 100px;
     display: flex;
