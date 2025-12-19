@@ -1,5 +1,5 @@
 // --- ASETUKSET ---
-const symbols = ["🍒", "🍋", "🔔", "⭐", "7️⃣"];
+const symbols = ["⚡", "🔱", "🦉", "⚔️", "👑"];
 let balance = 100;
 
 // --- PELILOGIIKKA ---
@@ -20,13 +20,13 @@ function play() {
 
     // Tarkista panos
     if (isNaN(bet) || bet <= 0) {
-        resultLabel.textContent = "Syötä kelvollinen numero!";
+        resultLabel.textContent = "⚠️ Enter a valid number!";
         resultLabel.style.color = "#ff6b6b";
         return;
     }
 
     if (bet > balance) {
-        resultLabel.textContent = "Virheellinen panos - ei tarpeeksi saldoa!";
+        resultLabel.textContent = "⚠️ Insufficient Drachmas!";
         resultLabel.style.color = "#ff6b6b";
         return;
     }
@@ -63,23 +63,23 @@ function play() {
         let win = 0;
         if (reels[0] === reels[1] && reels[1] === reels[2]) {
             win = bet * 5;
-            resultLabel.textContent = "🎉 ISO VOITTO! +" + win;
-            resultLabel.style.color = "#51cf66";
+            resultLabel.textContent = "�️ BLESSING OF THE GODS! +" + win;
+            resultLabel.style.color = "#ffd700";
         } else if (reels[0] === reels[1] || reels[1] === reels[2] || reels[0] === reels[2]) {
             win = bet * 2;
-            resultLabel.textContent = "🙂 Voitto! +" + win;
-            resultLabel.style.color = "#74c0fc";
+            resultLabel.textContent = "⚜️ DIVINE FAVOR! +" + win;
+            resultLabel.style.color = "#87ceeb";
         } else {
-            resultLabel.textContent = "❌ Ei voittoa";
+            resultLabel.textContent = "⚔️ The Fates Have Spoken";
             resultLabel.style.color = "#ff6b6b";
         }
 
         balance += win;
         balanceLabel.textContent = balance;
 
-        // Tarkista onko saldo loppu
+        // Tarkiska onko saldo loppu
         if (balance === 0) {
-            resultLabel.textContent = "💸 Peli ohi! Saldo loppu!";
+            resultLabel.textContent = "⚰️ Hades Claims Your Fortune!";
             resultLabel.style.color = "#ff6b6b";
         }
 
