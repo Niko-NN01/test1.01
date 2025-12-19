@@ -124,6 +124,7 @@ function checkWin(reels, bet) {
 
     let totalWin = 0;
     let winningLines = [];
+    let winningPositions = new Set(); // Track winning reel positions
 
     // Check each payline
     paylines.forEach((payline, lineIndex) => {
@@ -137,7 +138,9 @@ function checkWin(reels, bet) {
         if (wildCount === 5) {
             const lineWin = bet * 200;
             totalWin += lineWin;
-            winningLines.push({ line: lineIndex + 1, symbol: symbols.find(s => s.isWild), count: 5, win: lineWin });
+            winningLines.push({ line: lineIndex + 1, symbol: symbols.find(s => s.isWild), count: 5, win: lineWin, payline: payline });
+            // Mark all positions as winning
+            payline.forEach((row, col) => winningPositions.add(`${col}-${row}`));
             return;
         }
 
@@ -177,33 +180,44 @@ function checkWin(reels, bet) {
             
             if (lineWin > 0) {
                 totalWin += lineWin;
-                winningLines.push({ line: lineIndex + 1, symbol: matchingSymbol, count: matchCount, win: lineWin });
+                winningLines.push({ line: lineIndex + 1, symbol: matchingSymbol, count: matchCount, win: lineWin, payline: payline });
+                // Mark winning positions
+                for (let i = 0; i < matchCount; i++) {
+                    winningPositions.add(`${i}-${payline[i]}`);
+                }
             }
         }
     });
+
+    // Highlight winning symbols
+    highlightWinningSymbols(winningPositions);
 
     // Display results
     if (totalWin > 0) {
         const bestWin = winningLines.reduce((max, w) => w.win > max.win ? w : max);
         const wildBonus = winningLines.some(w => w.symbol.isWild) ? " 🌟" : "";
         
+        let winType = 'normal';
         if (bestWin.count === 5 && bestWin.symbol.isWild) {
             resultLabel.textContent = `🌟 WILD OLYMPUS! Line ${bestWin.line} = +${totalWin} (${winningLines.length} lines!)`;
             resultLabel.style.color = "#ff00ff";
+            winType = 'mega';
         } else if (bestWin.count === 5) {
             resultLabel.textContent = `🏛️ JACKPOT! ${bestWin.symbol.icon} x5 on Line ${bestWin.line} = +${totalWin} (${winningLines.length} lines!)${wildBonus}`;
             resultLabel.style.color = "#ffd700";
+            winType = 'mega';
         } else if (totalWin >= bet * 20) {
             resultLabel.textContent = `⚡ BIG WIN! +${totalWin} on ${winningLines.length} line(s!)${wildBonus}`;
             resultLabel.style.color = "#ffed4e";
+            winType = 'big';
         } else {
             resultLabel.textContent = `⚜️ WIN! +${totalWin} Drachmas on ${winningLines.length} line(s)${wildBonus}`;
-            resultLabel.style.color = "#87ceeb";
+            resultLabel.style.color = "#d4af37";
         }
         
-        if (totalWin >= bet * 50) {
-            resultLabel.classList.add('big-win');
-            setTimeout(() => resultLabel.classList.remove('big-win'), 2000);
+        // Show win animation overlay for big wins
+        if (totalWin >= bet * 20) {
+            showBigWinAnimation(totalWin, winType);
         }
     } else {
         resultLabel.textContent = "⚔️ The Fates Have Spoken";
@@ -220,6 +234,52 @@ function checkWin(reels, bet) {
     }
 
     spinBtn.disabled = false;
+}
+
+// Highlight winning symbols
+function highlightWinningSymbols(winningPositions) {
+    // Clear all previous highlights
+    document.querySelectorAll('.reel').forEach(reel => {
+        reel.classList.remove('winning', 'winning-pulse');
+    });
+
+    // Add highlight to winning positions
+    winningPositions.forEach(pos => {
+        const [col, row] = pos.split('-');
+        const reel = document.querySelector(`[data-reel="${col}"][data-row="${row}"]`);
+        if (reel) {
+            reel.classList.add('winning');
+            setTimeout(() => reel.classList.add('winning-pulse'), 50);
+        }
+    });
+
+    // Remove highlights after animation
+    setTimeout(() => {
+        document.querySelectorAll('.reel').forEach(reel => {
+            reel.classList.remove('winning', 'winning-pulse');
+        });
+    }, 3000);
+}
+
+// Show big win animation
+function showBigWinAnimation(amount, type) {
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'win-overlay';
+    overlay.innerHTML = `
+        <div class="win-animation ${type}">
+            <div class="win-text">${type === 'mega' ? 'LEGENDARY WIN!' : 'BIG WIN!'}</div>
+            <div class="win-amount">+${amount}</div>
+            <div class="win-subtitle">Drachmas</div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    // Remove after animation
+    setTimeout(() => {
+        overlay.style.opacity = '0';
+        setTimeout(() => overlay.remove(), 500);
+    }, 3000);
 }
 // Display symbol (emoji or image)
 function displaySymbol(element, symbol) {
