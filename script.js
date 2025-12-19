@@ -258,9 +258,6 @@ function setSpeed(speed) {
     } else if (speed === 'turbo') {
         spinSpeed = 300;
         document.querySelector('[data-speed="turbo"]').classList.add('active');
-    } else if (speed === 'fast') {
-        spinSpeed = 150;
-        document.querySelector('[data-speed="fast"]').classList.add('active');
     }
 }
 
