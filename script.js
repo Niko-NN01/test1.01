@@ -13,6 +13,7 @@ const symbols = [
 ];
 let balance = 100;
 let useImages = false; // Set to true when you have images added
+let spinSpeed = 300; // Default spin speed (lower = faster)
 
 // Define 10 paylines (row indices for each of 5 reels)
 const paylines = [
@@ -112,7 +113,7 @@ function play() {
             if (col === 4) {
                 setTimeout(() => checkWin(reels, bet), 300);
             }
-        }, 500 + (col * 300));
+        }, 500 + (col * spinSpeed));
     }
 }
 
@@ -244,6 +245,23 @@ function setBet(amount) {
     const betInput = document.getElementById('bet');
     let newBet = Math.max(1, Math.min(amount, balance));
     betInput.value = newBet;
+}
+
+// Speed control functions
+function setSpeed(speed) {
+    const buttons = document.querySelectorAll('.speed-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    if (speed === 'slow') {
+        spinSpeed = 500;
+        document.querySelector('[data-speed="slow"]').classList.add('active');
+    } else if (speed === 'normal') {
+        spinSpeed = 300;
+        document.querySelector('[data-speed="normal"]').classList.add('active');
+    } else if (speed === 'fast') {
+        spinSpeed = 150;
+        document.querySelector('[data-speed="fast"]').classList.add('active');
+    }
 }
 
 // Toggle info modal

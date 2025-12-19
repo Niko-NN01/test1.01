@@ -207,8 +207,57 @@ h1 {
 .controls {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
     align-items: center;
+}
+
+.speed-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.speed-controls label {
+    color: #87ceeb;
+    font-weight: bold;
+    font-size: 1em;
+    text-shadow: 0 0 10px rgba(135, 206, 235, 0.5);
+}
+
+.speed-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.speed-btn {
+    background: linear-gradient(145deg, rgba(135, 206, 235, 0.2), rgba(135, 206, 235, 0.1));
+    color: #87ceeb;
+    border: 2px solid rgba(135, 206, 235, 0.3);
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1em;
+}
+
+.speed-btn:hover {
+    background: linear-gradient(145deg, rgba(135, 206, 235, 0.4), rgba(135, 206, 235, 0.2));
+    border-color: #87ceeb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(135, 206, 235, 0.4);
+}
+
+.speed-btn.active {
+    background: linear-gradient(145deg, #87ceeb, #5f9ea0);
+    color: #0f2027;
+    border-color: #87ceeb;
+    box-shadow: 0 0 20px rgba(135, 206, 235, 0.6);
+}
+
+.speed-btn:active {
+    transform: translateY(0);
 }
 
 .bet-controls {
