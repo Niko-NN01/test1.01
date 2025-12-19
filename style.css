@@ -125,12 +125,12 @@ h1 {
 
 .reel {
     background: transparent;
-    width: 180px;
-    height: 100px;
+    width: 240px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 60px;
+    font-size: 50px;
     border-radius: 15px;
     border: 3px solid #ffd700;
     box-shadow: 
