@@ -311,6 +311,9 @@ function checkWin(reels, bet) {
             isSuperBonusMode = true;
         }
         
+        // Re-enable button before showing animation
+        spinBtn.disabled = false;
+        
         // Show free spins won animation, then offer gamble
         showFreeSpinsAnimation(scatterCount, newFreeSpins, isSuperBonusMode);
         return;
