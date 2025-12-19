@@ -247,17 +247,13 @@ function setBet(amount) {
     betInput.value = newBet;
 }
 
-// Speed control functions
-function setSpeed(speed) {
-    const buttons = document.querySelectorAll('.speed-btn');
-    buttons.forEach(btn => btn.classList.remove('active'));
-    
-    if (speed === 'normal') {
-        spinSpeed = 700;
-        document.querySelector('[data-speed="normal"]').classList.add('active');
-    } else if (speed === 'turbo') {
-        spinSpeed = 300;
-        document.querySelector('[data-speed="turbo"]').classList.add('active');
+// Turbo mode toggle
+function toggleTurbo() {
+    const toggle = document.getElementById('turboToggle');
+    if (toggle.checked) {
+        spinSpeed = 300; // Turbo
+    } else {
+        spinSpeed = 700; // Normal
     }
 }
 

@@ -218,46 +218,69 @@ h1 {
     align-items: center;
 }
 
-.speed-controls label {
-    color: #87ceeb;
-    font-weight: bold;
-    font-size: 1em;
-    text-shadow: 0 0 10px rgba(135, 206, 235, 0.5);
-}
-
-.speed-buttons {
+.turbo-label {
     display: flex;
-    gap: 10px;
-}
-
-.speed-btn {
-    background: linear-gradient(145deg, rgba(135, 206, 235, 0.2), rgba(135, 206, 235, 0.1));
+    align-items: center;
+    gap: 15px;
     color: #87ceeb;
-    border: 2px solid rgba(135, 206, 235, 0.3);
-    border-radius: 10px;
-    padding: 10px 20px;
     font-weight: bold;
+    font-size: 1.1em;
+    text-shadow: 0 0 10px rgba(135, 206, 235, 0.5);
     cursor: pointer;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 60px;
+    height: 30px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(145deg, rgba(100, 100, 100, 0.5), rgba(80, 80, 80, 0.5));
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 30px;
     transition: all 0.3s;
-    font-size: 1em;
 }
 
-.speed-btn:hover {
-    background: linear-gradient(145deg, rgba(135, 206, 235, 0.4), rgba(135, 206, 235, 0.2));
-    border-color: #87ceeb;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(135, 206, 235, 0.4);
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 2px;
+    bottom: 2px;
+    background: linear-gradient(145deg, #ccc, #999);
+    border-radius: 50%;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-.speed-btn.active {
+input:checked + .toggle-slider {
     background: linear-gradient(145deg, #87ceeb, #5f9ea0);
-    color: #0f2027;
     border-color: #87ceeb;
-    box-shadow: 0 0 20px rgba(135, 206, 235, 0.6);
+    box-shadow: 0 0 15px rgba(135, 206, 235, 0.6);
 }
 
-.speed-btn:active {
-    transform: translateY(0);
+input:checked + .toggle-slider:before {
+    transform: translateX(30px);
+    background: linear-gradient(145deg, #ffd700, #ffed4e);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+.toggle-slider:hover {
+    box-shadow: 0 0 10px rgba(135, 206, 235, 0.4);
 }
 
 .bet-controls {

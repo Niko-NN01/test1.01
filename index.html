@@ -60,11 +60,13 @@
         
         <div class="controls">
             <div class="speed-controls">
-                <label>Spin Speed:</label>
-                <div class="speed-buttons">
-                    <button class="speed-btn" data-speed="normal" onclick="setSpeed('normal')">🐢 Normal</button>
-                    <button class="speed-btn active" data-speed="turbo" onclick="setSpeed('turbo')">⚡ Turbo</button>
-                </div>
+                <label class="turbo-label">
+                    <span>Turbo Mode</span>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="turboToggle" checked onclick="toggleTurbo()">
+                        <span class="toggle-slider"></span>
+                    </div>
+                </label>
             </div>
             <div class="bet-controls">
                 <label>Bet Amount:</label>
