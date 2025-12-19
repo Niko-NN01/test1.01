@@ -13,7 +13,7 @@ const symbols = [
 ];
 let balance = 100;
 let useImages = false; // Set to true when you have images added
-let spinSpeed = 700; // Default spin speed (normal)
+let spinSpeed = 1000; // Default spin speed (normal) - slower for better experience
 
 // Allowed bet values
 const allowedBets = [0.2, 0.5, 1, 2, 5, 10, 25, 50, 100, 200];
@@ -110,6 +110,11 @@ function play() {
                 reel.classList.remove('spin');
                 reel.classList.add('stop');
                 setTimeout(() => reel.classList.remove('stop'), 200);
+            }
+            
+            // Check for potential big wins and highlight
+            if (col >= 2) {
+                highlightPotentialWin(reels, col, bet);
             }
             
             // Check win after last column stops
@@ -239,6 +244,56 @@ function checkWin(reels, bet) {
     spinBtn.disabled = false;
 }
 
+// Highlight potential big wins as reels stop
+function highlightPotentialWin(reels, stoppedCol, bet) {
+    // Check each payline for potential wins
+    paylines.forEach((payline) => {
+        // Only check the stopped columns
+        const stoppedSymbols = [];
+        for (let col = 0; col <= stoppedCol; col++) {
+            stoppedSymbols.push(reels[col][payline[col]]);
+        }
+        
+        // Check if we have matching symbols or wilds
+        let matchCount = 1;
+        let matchingSymbol = stoppedSymbols[0].isWild ? null : stoppedSymbols[0];
+        
+        for (let i = 1; i < stoppedSymbols.length; i++) {
+            const current = stoppedSymbols[i];
+            
+            if (current.isWild) {
+                matchCount++;
+                continue;
+            }
+            
+            if (matchingSymbol === null) {
+                matchingSymbol = current;
+                matchCount++;
+            } else if (current.icon === matchingSymbol.icon) {
+                matchCount++;
+            } else {
+                break;
+            }
+        }
+        
+        // If we have 3+ matching symbols and potential for big win
+        if (matchCount >= 3 && matchingSymbol) {
+            const potentialWin = bet * matchingSymbol.value;
+            
+            // Highlight if it's a high-value symbol or potential big win
+            if (potentialWin >= bet * 15 || matchingSymbol.value >= 25) {
+                for (let col = 0; col < matchCount; col++) {
+                    const reel = document.querySelector(`[data-reel="${col}"][data-row="${payline[col]}"]`);
+                    if (reel) {
+                        reel.classList.add('potential-win');
+                        setTimeout(() => reel.classList.remove('potential-win'), 800);
+                    }
+                }
+            }
+        }
+    });
+}
+
 // Highlight winning symbols
 function highlightWinningSymbols(winningPositions) {
     // Clear all previous highlights
@@ -332,9 +387,9 @@ function updateBetDisplay() {
 function toggleTurbo() {
     const toggle = document.getElementById('turboToggle');
     if (toggle.checked) {
-        spinSpeed = 300; // Turbo
+        spinSpeed = 600; // Turbo (faster but still reasonable)
     } else {
-        spinSpeed = 700; // Normal
+        spinSpeed = 1000; // Normal (slower)
     }
 }
 
