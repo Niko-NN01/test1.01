@@ -119,6 +119,14 @@ function playWithBet(bet) {
     // Get all reel elements (3 symbols x 5 reels = 15 elements)
     const allReels = document.querySelectorAll('.reel');
 
+    // Clear any existing spinning states and intervals first
+    allReels.forEach((reel) => {
+        if (reel.dataset.spinInterval) {
+            clearInterval(parseInt(reel.dataset.spinInterval));
+        }
+        reel.classList.remove('spin', 'stop', 'winning', 'potential-win');
+    });
+
     // Start spinning all reels
     allReels.forEach((reel) => {
         reel.classList.add('spin');
@@ -273,9 +281,8 @@ function checkWin(reels, bet) {
         updateFreeSpinsCounter();
         
         if (freeSpinsRemaining > 0) {
-            // Auto-spin next free spin - keep button disabled
+            // Auto-spin next free spin after delay
             setTimeout(() => {
-                spinBtn.disabled = false;  // Briefly enable to allow play() to work
                 play();
             }, 2000);
             return;
