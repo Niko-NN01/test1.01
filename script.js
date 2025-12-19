@@ -13,7 +13,7 @@ const symbols = [
 ];
 let balance = 100;
 let useImages = false; // Set to true when you have images added
-let spinSpeed = 300; // Default spin speed (turbo)
+let spinSpeed = 700; // Default spin speed (normal)
 
 // Define 10 paylines (row indices for each of 5 reels)
 const paylines = [
