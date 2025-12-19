@@ -499,45 +499,26 @@ input:checked + .toggle-slider:before {
     display: flex;
 }
 
-.bet-buttons {
+.custom-bet-input {
     display: flex;
-    gap: 5px;
+    flex-direction: column;
+    gap: 8px;
     align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
+    padding-top: 10px;
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
 }
 
-.bet-btn {
-    background: linear-gradient(135deg, #2a2a35 0%, #1f1f28 100%);
-    color: #d4af37;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    border-radius: 8px;
-    padding: 10px 18px;
+.custom-bet-input label {
+    color: #a08850;
+    font-size: 0.95em;
     font-weight: 600;
-    font-family: 'Raleway', sans-serif;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-size: 1em;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.bet-btn:hover {
-    background: linear-gradient(135deg, #d4af37 0%, #c9a227 100%);
-    color: #1a1a22;
-    border-color: #d4af37;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-}
-
-.bet-btn:active {
-    transform: translateY(0);
 }
 
 .bet-presets {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
     gap: 8px;
-    flex-wrap: wrap;
-    justify-content: center;
+    width: 100%;
 }
 
 .preset-btn {

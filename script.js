@@ -15,6 +15,9 @@ let balance = 100;
 let useImages = false; // Set to true when you have images added
 let spinSpeed = 700; // Default spin speed (normal)
 
+// Allowed bet values
+const allowedBets = [0.2, 0.5, 1, 2, 5, 10, 25, 50, 100, 200];
+
 // Define 10 paylines (row indices for each of 5 reels)
 const paylines = [
     [1, 1, 1, 1, 1], // Line 1: Middle row
@@ -56,20 +59,20 @@ function spin() {
 
 function play() {
     const betInput = document.getElementById('bet');
-    const bet = parseInt(betInput.value);
+    const bet = parseFloat(betInput.value);
     const resultLabel = document.getElementById('result');
     const balanceLabel = document.getElementById('balance');
     const spinBtn = document.getElementById('spinBtn');
 
     // Tarkista panos
-    if (isNaN(bet) || bet <= 0) {
-        resultLabel.textContent = "⚠️ Enter a valid number!";
+    if (isNaN(bet) || bet < 0.2) {
+        resultLabel.textContent = "⚠️ Minimum bet is €0.20!";
         resultLabel.style.color = "#ff6b6b";
         return;
     }
 
     if (bet > balance) {
-        resultLabel.textContent = "⚠️ Insufficient Drachmas!";
+        resultLabel.textContent = "⚠️ Insufficient Balance!";
         resultLabel.style.color = "#ff6b6b";
         return;
     }
@@ -79,7 +82,7 @@ function play() {
 
     // Vähennä panos
     balance -= bet;
-    balanceLabel.textContent = balance;
+    balanceLabel.textContent = balance.toFixed(2);
 
     // Get all reel elements (3 symbols x 5 reels = 15 elements)
     const allReels = document.querySelectorAll('.reel');
@@ -199,19 +202,19 @@ function checkWin(reels, bet) {
         
         let winType = 'normal';
         if (bestWin.count === 5 && bestWin.symbol.isWild) {
-            resultLabel.textContent = `🌟 WILD OLYMPUS! Line ${bestWin.line} = +${totalWin} (${winningLines.length} lines!)`;
+            resultLabel.textContent = `🌟 WILD OLYMPUS! Line ${bestWin.line} = +€${totalWin.toFixed(2)} (${winningLines.length} lines!)`;
             resultLabel.style.color = "#ff00ff";
             winType = 'mega';
         } else if (bestWin.count === 5) {
-            resultLabel.textContent = `🏛️ JACKPOT! ${bestWin.symbol.icon} x5 on Line ${bestWin.line} = +${totalWin} (${winningLines.length} lines!)${wildBonus}`;
+            resultLabel.textContent = `🏛️ JACKPOT! ${bestWin.symbol.icon} x5 on Line ${bestWin.line} = +€${totalWin.toFixed(2)} (${winningLines.length} lines!)${wildBonus}`;
             resultLabel.style.color = "#ffd700";
             winType = 'mega';
         } else if (totalWin >= bet * 20) {
-            resultLabel.textContent = `⚡ BIG WIN! +${totalWin} on ${winningLines.length} line(s!)${wildBonus}`;
+            resultLabel.textContent = `⚡ BIG WIN! +€${totalWin.toFixed(2)} on ${winningLines.length} line(s!)${wildBonus}`;
             resultLabel.style.color = "#ffed4e";
             winType = 'big';
         } else {
-            resultLabel.textContent = `⚜️ WIN! +${totalWin} Drachmas on ${winningLines.length} line(s)${wildBonus}`;
+            resultLabel.textContent = `⚜️ WIN! +€${totalWin.toFixed(2)} on ${winningLines.length} line(s)${wildBonus}`;
             resultLabel.style.color = "#d4af37";
         }
         
@@ -225,10 +228,10 @@ function checkWin(reels, bet) {
     }
 
     balance += totalWin;
-    balanceLabel.textContent = balance;
+    balanceLabel.textContent = balance.toFixed(2);
 
     // Check if balance is zero
-    if (balance === 0) {
+    if (balance < 0.2) {
         resultLabel.textContent = "⚰️ Hades Claims Your Fortune!";
         resultLabel.style.color = "#ff6b6b";
     }
@@ -269,8 +272,8 @@ function showBigWinAnimation(amount, type) {
     overlay.innerHTML = `
         <div class="win-animation ${type}">
             <div class="win-text">${type === 'mega' ? 'LEGENDARY WIN!' : 'BIG WIN!'}</div>
-            <div class="win-amount">+${amount}</div>
-            <div class="win-subtitle">Drachmas</div>
+            <div class="win-amount">+€${amount.toFixed(2)}</div>
+            <div class="win-subtitle">Euros</div>
         </div>
     `;
     document.body.appendChild(overlay);
@@ -293,18 +296,18 @@ function displaySymbol(element, symbol) {
 // Bet adjustment functions
 function adjustBet(amount) {
     const betInput = document.getElementById('bet');
-    let currentBet = parseInt(betInput.value) || 10;
+    let currentBet = parseFloat(betInput.value) || 1;
     let newBet = currentBet + amount;
     
-    // Ensure bet is at least 1 and not more than balance
-    newBet = Math.max(1, Math.min(newBet, balance));
-    betInput.value = newBet;
+    // Ensure bet is at least 0.2 and not more than balance
+    newBet = Math.max(0.2, Math.min(newBet, balance));
+    betInput.value = newBet.toFixed(2);
     updateBetDisplay();
 }
 
 function setBet(amount) {
     const betInput = document.getElementById('bet');
-    let newBet = Math.max(1, Math.min(amount, balance));
+    let newBet = Math.max(0.2, Math.min(amount, balance));
     betInput.value = newBet;
     updateBetDisplay();
 }
@@ -320,7 +323,8 @@ function updateBetDisplay() {
     const betInput = document.getElementById('bet');
     const display = document.getElementById('currentBetDisplay');
     if (display) {
-        display.textContent = betInput.value;
+        const value = parseFloat(betInput.value) || 1;
+        display.textContent = value.toFixed(2);
     }
 }
 

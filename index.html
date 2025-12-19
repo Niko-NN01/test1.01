@@ -14,7 +14,7 @@
         <p class="subtitle">Fortune of the Gods</p>
         
         <div class="balance">
-            <p>⚜️ Drachmas: <span id="balance">100</span> ⚜️</p>
+            <p>⚜️ Balance: €<span id="balance">100</span> ⚜️</p>
         </div>
         
         <div class="reels-container">
@@ -70,24 +70,24 @@
             </div>
             <div class="bet-controls">
                 <label class="bet-label" onclick="toggleBetMenu()">
-                    Bet Amount: <span id="currentBetDisplay">10</span> ▼
+                    Bet Amount: €<span id="currentBetDisplay">1</span> ▼
                 </label>
                 <div class="bet-dropdown" id="betDropdown">
-                    <div class="bet-buttons">
-                        <button class="bet-btn" onclick="adjustBet(-10)">-10</button>
-                        <button class="bet-btn" onclick="adjustBet(-5)">-5</button>
-                        <button class="bet-btn" onclick="adjustBet(-1)">-1</button>
-                        <input type="number" id="bet" value="10" min="1" placeholder="Bet" onchange="updateBetDisplay()">
-                        <button class="bet-btn" onclick="adjustBet(1)">+1</button>
-                        <button class="bet-btn" onclick="adjustBet(5)">+5</button>
-                        <button class="bet-btn" onclick="adjustBet(10)">+10</button>
-                    </div>
                     <div class="bet-presets">
-                        <button class="preset-btn" onclick="setBet(1)">MIN</button>
-                        <button class="preset-btn" onclick="setBet(10)">10</button>
-                        <button class="preset-btn" onclick="setBet(25)">25</button>
-                        <button class="preset-btn" onclick="setBet(50)">50</button>
-                        <button class="preset-btn" onclick="setBet(balance)">MAX</button>
+                        <button class="preset-btn" onclick="setBet(0.2)">€0.20</button>
+                        <button class="preset-btn" onclick="setBet(0.5)">€0.50</button>
+                        <button class="preset-btn" onclick="setBet(1)">€1</button>
+                        <button class="preset-btn" onclick="setBet(2)">€2</button>
+                        <button class="preset-btn" onclick="setBet(5)">€5</button>
+                        <button class="preset-btn" onclick="setBet(10)">€10</button>
+                        <button class="preset-btn" onclick="setBet(25)">€25</button>
+                        <button class="preset-btn" onclick="setBet(50)">€50</button>
+                        <button class="preset-btn" onclick="setBet(100)">€100</button>
+                        <button class="preset-btn" onclick="setBet(200)">€200</button>
+                    </div>
+                    <div class="custom-bet-input">
+                        <label>Custom Bet:</label>
+                        <input type="number" id="bet" value="1" min="0.2" step="0.1" placeholder="Bet" onchange="updateBetDisplay()">
                     </div>
                 </div>
             </div>
